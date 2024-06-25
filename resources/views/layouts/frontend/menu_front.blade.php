@@ -5,14 +5,25 @@
                 <a href="index.html" class="logo m-0 float-start">{{ env('APP_NAME') }}</a>
 
                 <ul class="js-clone-nav d-none d-lg-inline-block text-start site-menu float-end">
-                    <li class="active"><a href="{{ url('/') }}">Home</a></li>
-                    <li><a href="services.html">Cari KOS</a></li>
-                    <li><a href="services.html">Semua KOS</a></li>
+                    <li class="{{ request()->is('/') ? 'active' : '' }}">
+                        <a href="{{ url('/') }}">Home</a>
+                    </li>
+                    <li class="{{ request()->is('cari-kos') ? 'active' : '' }}">
+                        <a href="{{ url('/cari-kos') }}">Cari
+                            KOS</a>
+                    </li>
+                    <li class="{{ request()->is('semua-kos') ? 'active' : '' }}">
+                        <a href="{{ url('/semua-kos') }}">Semua KOS</a>
+                    </li>
                     @guest
                         <li><a href="{{ route('login') }}">Masuk</a></li>
                         <li><a href="{{ route('register') }}">Daftar</a></li>
                     @else
-                        <li><a href="{{ route('home') }}">Dashboard</a></li>
+                        @if (Auth::user()->role == 'User')
+                            <li><a href="{{ route('home') }}">Akun</a></li>
+                        @else
+                            <li><a href="{{ route('home') }}">Dashboard</a></li>
+                        @endif
                     @endguest
                 </ul>
                 <a href="#"

@@ -18,11 +18,20 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('pages.index');
+    $title = 'Home';
+    return view('pages.index', ['title' => $title]);
 });
-
+Route::get('/semua-kos', function () {
+    $title = 'Semua Kos';
+    return view('pages.semua', ['title' => $title]);
+});
+Route::get('/cari-kos', function () {
+    $title = 'Cari Kos';
+    return view('pages.cari', ['title' => $title]);
+});
+Auth::routes(['verify' => true]);
 Auth::routes();
-Route::middleware(['auth:web'])->group(function () {
+Route::middleware(['auth:web', 'verified'])->group(function () {
     Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
     //akun managemen
@@ -35,7 +44,7 @@ Route::middleware(['auth:web'])->group(function () {
     Route::delete('/customers/delete/{id}',  [CustomerController::class, 'destroy'])->name('customers.delete');
     Route::get('/customers-datatable', [CustomerController::class, 'getCustomersDataTable']);
 });
-Route::middleware(['auth:web', 'role:Admin'])->group(function () {
+Route::middleware(['auth:web', 'role:Admin', 'verified'])->group(function () {
     //user managemen
     Route::get('/users', [UserController::class, 'index'])->name('users');
     Route::post('/users/store',  [UserController::class, 'store'])->name('users.store');
