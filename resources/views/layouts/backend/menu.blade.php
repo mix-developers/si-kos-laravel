@@ -60,7 +60,7 @@
     <ul class="menu-inner py-1">
         <!-- Dashboard -->
         <li class="menu-header small text-uppercase">
-            <span class="menu-header-text">{{ env('APP_NAME') ?? 'Laravel' }}</span>
+            <span class="menu-header-text">{{ Auth::user()->role == 'Admin' ? 'Admin' : 'Pemilik Kos' }}</span>
         </li>
         <li class="menu-item {{ request()->is('home*') ? 'active' : '' }}">
             <a href="{{ url('/home') }}" class="menu-link">
@@ -68,24 +68,57 @@
                 <div data-i18n="Analytics">Dashboard</div>
             </a>
         </li>
-        <li class="menu-header small text-uppercase">
-            <span class="menu-header-text">customers</span>
-        </li>
-        <li class="menu-item {{ request()->is('customers') ? 'active' : '' }}">
-            <a href="{{ url('/customers') }}" class="menu-link">
-                <i class="menu-icon tf-icons bx bx-user"></i>
-                <div data-i18n="Analytics">Customers</div>
-            </a>
-        </li>
-        <li class="menu-header small text-uppercase">
-            <span class="menu-header-text">users</span>
-        </li>
-        <li class="menu-item {{ request()->is('users') ? 'active' : '' }}">
-            <a href="{{ url('/users') }}" class="menu-link">
-                <i class="menu-icon tf-icons bx bx-user"></i>
-                <div data-i18n="Analytics">Users</div>
-            </a>
-        </li>
+        @if (Auth::user()->role == 'Admin')
+            <li class="menu-header small text-uppercase">
+                <span class="menu-header-text">Master Data</span>
+            </li>
+            <li class="menu-item {{ request()->is('fasilitas') ? 'active' : '' }}">
+                <a href="{{ url('/fasilitas') }}" class="menu-link">
+                    <i class="menu-icon tf-icons bx bx-layer"></i>
+                    <div data-i18n="Analytics">Data Fasilitas</div>
+                </a>
+            </li>
+            <li class="menu-header small text-uppercase">
+                <span class="menu-header-text">Data KOS</span>
+            </li>
+            <li class="menu-item {{ request()->is('kos') ? 'active' : '' }}">
+                <a href="{{ url('/kos') }}" class="menu-link">
+                    <i class="menu-icon tf-icons bx bx-home"></i>
+                    <div data-i18n="Analytics">Data Kos</div>
+                </a>
+            </li>
+            <li class="menu-header small text-uppercase">
+                <span class="menu-header-text">Pengguna</span>
+            </li>
+            <li class="menu-item {{ request()->is('users/user') ? 'active' : '' }}">
+                <a href="{{ url('/users/user') }}" class="menu-link">
+                    <i class="menu-icon tf-icons bx bx-user"></i>
+                    <div data-i18n="Analytics">Pencari KOS</div>
+                </a>
+            </li>
+            <li class="menu-item {{ request()->is('users/owner') ? 'active' : '' }}">
+                <a href="{{ url('/users/owner') }}" class="menu-link">
+                    <i class="menu-icon tf-icons bx bx-user"></i>
+                    <div data-i18n="Analytics">Pemilik KOS</div>
+                </a>
+            </li>
+        @else
+            <li class="menu-header small text-uppercase">
+                <span class="menu-header-text">KOS</span>
+            </li>
+            <li class="menu-item {{ request()->is('my-kos') ? 'active' : '' }}">
+                <a href="{{ url('/my-kos') }}" class="menu-link">
+                    <i class="menu-icon tf-icons bx bx-home"></i>
+                    <div data-i18n="Analytics">KOS Saya</div>
+                </a>
+            </li>
+            <li class="menu-item {{ request()->is('sewa') ? 'active' : '' }}">
+                <a href="{{ url('/sewa') }}" class="menu-link">
+                    <i class="menu-icon tf-icons bx bx-street-view"></i>
+                    <div data-i18n="Analytics">Penyewaan</div>
+                </a>
+            </li>
+        @endif
         <li class="menu-header small text-uppercase">
             <span class="menu-header-text">Akun</span>
         </li>

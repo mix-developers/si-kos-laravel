@@ -16,11 +16,14 @@
                         <a href="{{ url('/semua-kos') }}">Semua KOS</a>
                     </li>
                     @guest
+                        <li class="text-white">|</li>
                         <li><a href="{{ route('login') }}">Masuk</a></li>
                         <li><a href="{{ route('register') }}">Daftar</a></li>
                     @else
+                        <li class="text-white">|</li>
                         @if (Auth::user()->role == 'User')
-                            <li><a href="{{ route('home') }}">Akun</a></li>
+                            <li><a href="{{ url('/akun') }}">Akun</a></li>
+                            <li><a href="{{ url('/akun') }}" class="btn btn-danger btn-sm text-white">Logout</a></li>
                         @else
                             <li><a href="{{ route('home') }}">Dashboard</a></li>
                         @endif

@@ -22,9 +22,25 @@ class UserController extends Controller
         ];
         return view('admin.users.index', $data);
     }
-    public function getUsersDataTable()
+    public function user()
     {
-        $users = User::select(['id', 'name', 'email', 'created_at', 'updated_at', 'role', 'avatar'])->orderByDesc('id');
+        $data = [
+            'title' => 'Pencari KOS',
+            'role' => 'User',
+        ];
+        return view('admin.users.user', $data);
+    }
+    public function owner()
+    {
+        $data = [
+            'title' => 'Pemilik KOS',
+            'role' => 'Pemilik_kos',
+        ];
+        return view('admin.users.owner', $data);
+    }
+    public function getUsersDataTable($role)
+    {
+        $users = User::where('role', $role)->orderByDesc('id');
 
         return Datatables::of($users)
             ->addColumn('avatar', function ($user) {

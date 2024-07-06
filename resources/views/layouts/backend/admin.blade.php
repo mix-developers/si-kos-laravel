@@ -30,7 +30,9 @@
     <!-- Core CSS -->
     <link rel="stylesheet" href="{{ asset('backend_theme/') }}/assets/vendor/css/core.css"
         class="template-customizer-core-css" />
-    <link rel="stylesheet" href="{{ asset('backend_theme/') }}/assets/vendor/css/rtl/theme-semi-dark.css"
+    {{-- <link rel="stylesheet" href="{{ asset('backend_theme/') }}/assets/vendor/css/rtl/theme-semi-dark.css"
+        class="template-customizer-theme-css" /> --}}
+    <link rel="stylesheet" href="{{ asset('backend_theme/') }}/assets/vendor/css/theme-default.css"
         class="template-customizer-theme-css" />
     <link rel="stylesheet" href="{{ asset('backend_theme/') }}/assets/css/demo.css" />
     @stack('css')

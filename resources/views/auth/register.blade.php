@@ -20,6 +20,18 @@
                     {{-- <input type="hidden" name="role" value="mahasiswa"> --}}
 
                     <div class="mb-3">
+                        <label for="role" class="form-label" id="no-title">Sebagai</label>
+                        <select class="form-select" id="role" name="role">
+                            <option value="User">Pencari Kos</option>
+                            <option value="Pemilik_kos">Pemilik Kos</option>
+                        </select>
+                        @error('role')
+                            <span class="text-danger" role="alert">
+                                <small>{{ $message }}</small>
+                            </span>
+                        @enderror
+                    </div>
+                    <div class="mb-3">
                         <label for="name" class="form-label" id="no-title">Nama Lengkap</label>
                         <input type="text" class="form-control" id="name" name="name" placeholder="Nama Lengkap"
                             autofocus />
