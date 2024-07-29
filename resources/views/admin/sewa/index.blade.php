@@ -25,7 +25,11 @@
                         <thead>
                             <tr>
                                 <th>ID</th>
-                                <th>Nama Fasilitas</th>
+                                <th>Nama Penyewa</th>
+                                <th>Tanggal masuk</th>
+                                <th>jangka waktu</th>
+                                <th>jumlah orang</th>
+                                <th>Status</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
@@ -33,7 +37,11 @@
                         <tfoot>
                             <tr>
                                 <th>ID</th>
-                                <th>Nama Fasilitas</th>
+                                <th>Nama Penyewa</th>
+                                <th>Tanggal masuk</th>
+                                <th>jangka waktu</th>
+                                <th>jumlah orang</th>
+                                <th>Status</th>
                                 <th>Action</th>
                             </tr>
                         </tfoot>

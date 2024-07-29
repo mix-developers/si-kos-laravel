@@ -91,8 +91,8 @@
                                                 @endforeach
 
                                             </div>
-                                            <a href="{{ url('/kos', $item->slug) }}" class="btn btn-primary py-2 px-3 ">See
-                                                details</a>
+                                            <a href="{{ url('/kos', $item->slug) }}" class="btn btn-primary py-2 px-3 "
+                                                style="width: 100%">Lihat Kos</a>
 
                                         </div>
                                     </div>

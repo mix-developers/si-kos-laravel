@@ -95,7 +95,7 @@
                                         <span class="avatar-initial rounded bg-label-primary"><i
                                                 class="bx bxs-home"></i></span>
                                     </div>
-                                    <h4 class="ms-1 mb-0">0</h4>
+                                    <h4 class="ms-1 mb-0">{{ App\Models\SewaKos::tersewa($kos->id) }}</h4>
                                 </div>
                                 <p class="mb-1">Tersewa</p>
                                 <p class="mb-0">
@@ -112,7 +112,7 @@
                                         <span class="avatar-initial rounded bg-label-warning"><i
                                                 class="bx bxs-home"></i></span>
                                     </div>
-                                    <h4 class="ms-1 mb-0">0</h4>
+                                    <h4 class="ms-1 mb-0">{{ App\Models\SewaKos::tersedia($kos->id) }}</h4>
                                 </div>
                                 <p class="mb-1">Tersedia</p>
                                 <p class="mb-0">

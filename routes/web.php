@@ -7,6 +7,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SewaController;
 use App\Http\Controllers\UserController;
 use App\Models\Kos;
+use App\Models\SewaKos;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -56,9 +57,18 @@ Route::middleware(['auth:web', 'role:User', 'verified'])->group(function () {
         return view('pages.akun', ['title' => $title]);
     });
 });
+Route::middleware(['auth:web', 'role:User', 'verified'])->group(function () {
+    Route::get('/kos-saya',  [SewaController::class, 'kos_user'])->name('kos-saya');
+    Route::get('/sewa/ajukan',  [SewaController::class, 'ajukan'])->name('sewa.ajukan');
+    Route::post('/sewa/store',  [SewaController::class, 'store'])->name('sewa.store');
+});
 Route::middleware(['auth:web', 'role:Pemilik_kos', 'verified'])->group(function () {
     //sewa managemen
     Route::get('/sewa',  [SewaController::class, 'index'])->name('sewa');
+    Route::get('/sewa/accept/{id}', [SewaController::class, 'accept'])->name('sewa.accept');
+    Route::get('/sewa/reject/{id}', [SewaController::class, 'reject'])->name('sewa.reject');
+    // Route::get('/sewa-datatable',  [SewaController::class, 'getSewaDataTable']);
+
     //kos managemen
     Route::get('/my-kos',  [KosController::class, 'kos'])->name('my-kos');
     Route::post('/kos/store',  [KosController::class, 'store'])->name('kos.store');
@@ -70,11 +80,14 @@ Route::middleware(['auth:web', 'role:Pemilik_kos', 'verified'])->group(function 
     Route::get('/fasilitas-umum-datatable/{id_kos}', [KosController::class, 'getFasilitasUmumDataTable']);
     Route::get('/fasilitas-tambahan-datatable/{id_kos}', [KosController::class, 'getFasilitasTambahanDataTable']);
 });
+Route::middleware(['auth:web', 'role:Admin,Pemilik_kos', 'verified'])->group(function () {
+    Route::get('/sewa/detail/{id}', [SewaController::class, 'detail'])->name('sewa.detail');
+    Route::get('/sewa-datatable', [SewaController::class, 'getSewaDataTable']);
+});
 Route::middleware(['auth:web', 'role:Admin', 'verified'])->group(function () {
     //kos managemen
     Route::get('/kos', [KosController::class, 'index'])->name('kos');
     Route::delete('/kos/delete/{id}',  [KosController::class, 'destroy'])->name('kos.delete');
-    Route::get('/kos-datatable', [KosController::class, 'getKosDataTable']);
     //fasilitas managemen
     Route::get('/fasilitas', [FasilitasKosController::class, 'index'])->name('fasilitas');
     Route::post('/fasilitas/store',  [FasilitasKosController::class, 'store'])->name('fasilitas.store');

@@ -22,8 +22,16 @@
                     @else
                         <li class="text-white">|</li>
                         @if (Auth::user()->role == 'User')
+                            <li><a href="{{ url('/kos-saya') }}">Kos Saya</a></li>
                             <li><a href="{{ url('/akun') }}">Akun</a></li>
-                            <li><a href="{{ url('/akun') }}" class="btn btn-danger btn-sm text-white">Logout</a></li>
+                            <li><a href="{{ route('logout') }}" class="btn btn-danger btn-sm text-white"
+                                    onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                                    Logout
+                                </a>
+                            </li>
+                            <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                                @csrf
+                            </form>
                         @else
                             <li><a href="{{ route('home') }}">Dashboard</a></li>
                         @endif

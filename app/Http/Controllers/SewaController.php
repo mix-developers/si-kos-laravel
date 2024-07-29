@@ -2,7 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Kos;
+use App\Models\SewaKos;
+use Illuminate\Auth\Events\Verified;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class SewaController extends Controller
 {
@@ -12,5 +16,130 @@ class SewaController extends Controller
             'title' => 'Data Penyewaan KOS',
         ];
         return view('admin.sewa.index', $data);
+    }
+    public function kos_user()
+    {
+        $data = [
+            'title' => 'Kos Saya',
+            'kos' => Kos::latest()->limit(3)->get(),
+            'sewa_active' => SewaKos::with(['kos'])->where('id_user', Auth::id())->first(),
+            'sewa_no_active' => SewaKos::where('id_user', Auth::id())->get(),
+        ];
+        return view('pages.sewa.kos_saya', $data);
+    }
+    public function ajukan(Request $request)
+    {
+        if (!Auth::check()) {
+            return redirect()->to('/login');
+        }
+        $tanggal = $request->input('tanggal');
+        $kos = Kos::find($request->id_kos);
+        $data = [
+            'title' => 'Ajukan Sewa : ' . $kos->nama_kos,
+            'tanggal' => $tanggal,
+            'kos' => $kos
+        ];
+        return view('pages.sewa.ajukan', $data);
+    }
+    public function store(Request $request)
+    {
+        $request->validate([
+            'id_kos' => 'required|string|max:255',
+            'nama_penyewa' => 'required|string|max:20',
+            'jumlah_orang' => 'required|string',
+            'jangka_waktu' => 'required|string',
+            'tanggal_sewa' => 'required|string',
+        ]);
+
+        $sewaData = [
+            'id_kos' => $request->input('id_kos'),
+            'nama_penyewa' => $request->input('nama_penyewa'),
+            'jumlah_orang' => $request->input('jumlah_orang'),
+            'jangka_waktu' => $request->input('jangka_waktu'),
+            'tanggal_sewa' => $request->input('tanggal_sewa'),
+            'id_user' => Auth::id(),
+        ];
+        $kos =  Kos::find($request->input('id_kos'));
+
+        $sewa = SewaKos::create($sewaData);
+        // Periksa keberhasilan pembuatan entri SewaKos
+        if ($sewa) {
+            session()->flash('success', 'Berhasil mengajukan sewa, periksa status pengajuan secara berkala untuk melihat verifikasi oleh pemilik.');
+            // Redirect pengguna ke halaman kos dengan slug yang sesuai
+            return redirect()->to('kos/' . $kos->slug);
+        } else {
+            session()->flash('error', 'Gagal mengajukan sewa. Silakan coba lagi.');
+            return redirect()->back();
+        }
+    }
+    public function getSewaDataTable()
+    {
+        $sewa = SewaKos::orderByDesc('id');
+        if (Auth::user()->role == 'Pemilik_kos') {
+            $kos = Kos::where('id_user', Auth::user()->id)->first();
+            $sewa = $sewa->where('id_kos', $kos->id);
+        }
+
+        return datatables()::of($sewa)
+            ->addColumn('action', function ($sewa) {
+                $accept = '<button type="button" onclick="acceptAction(' . $sewa->id . ')" class="btn btn-sm btn-success mx-1">Terima</button>';
+                $reject = '<button type="button"  onclick="rejectAction(' . $sewa->id . ')"  class="btn btn-sm btn-danger mx-1">Tolak</button>';
+                $detail = '<button type="button" onclick="detailAction(' . $sewa->id . ')" class="btn btn-sm btn-primary mx-1">Detail</button>';
+                if (Auth::user()->role == 'Pemilik_kos') {
+                    $button = $sewa->is_verified == 0 ? $detail . $accept . $reject : $detail;
+                } else {
+                    $button = $detail;
+                }
+                return $button;
+            })
+            ->addColumn('status', function ($sewa) {
+                $diterima = '<span class="badge bg-success">diterima</span>';
+                $tolak = '<span class="badge bg-danger">ditolak</span>';
+                $menunggu = '<span class="badge bg-secondary">pengajuan</span>';
+                if ($sewa->is_verified == 0) {
+                    return $menunggu;
+                } elseif ($sewa->is_verified == 1) {
+                    return $diterima;
+                } else {
+                    return $tolak;
+                }
+            })
+            ->rawColumns(['action', 'status'])
+            ->make(true);
+    }
+    public function detail($id)
+    {
+        $sewa = SewaKos::with(['user', 'kos'])->where('id', $id)->first();
+        return response()->json($sewa);
+    }
+    public function accept($id)
+    {
+        $message = '';
+        $sewa = SewaKos::find($id);
+        $cek_pintu = SewaKos::tersedia($sewa->id_kos);
+        if ($cek_pintu != 0) {
+            $sewa->is_verified = 1;
+            if ($sewa->save()) {
+                $cek_pintu2 = SewaKos::tersedia($sewa->id_kos);
+                if ($cek_pintu2 == 0) {
+                    $kos = Kos::find('id', $sewa->id_kos);
+                    $kos->status = 'Close';
+                    $kos->save();
+                }
+                $message = 'Berhasil menerima';
+            } else {
+                $message = 'Kos telah penuh';
+            }
+        } else {
+            $message = 'Kos telah penuh';
+        }
+        return response()->json($message);
+    }
+    public function reject($id)
+    {
+        $sewa = SewaKos::find($id);
+        $sewa->is_verified = 2;
+        $sewa->save();
+        return response()->json([$sewa]);
     }
 }
