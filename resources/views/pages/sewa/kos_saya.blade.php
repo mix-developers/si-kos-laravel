@@ -72,7 +72,7 @@
                                 <div class="d-flex align-items-center mb-4">
                                     <strong class="p-2 border rounded text-success"
                                         style="font-size: 14px;">{{ $sewa_active->kos->peruntukan }}</strong>
-                                    <i class="icon-star mx-2 text-success"></i> <b>5.0</b>
+                                    <i class="icon-star mx-2 text-success"></i> <b>{{App\Models\Rating::getRatingKos($sewa_active->id_kos)}}</b>
                                     <span class="mx-2"> | Pemilik : {{ $sewa_active->kos->nama_pemilik }}</span>
                                     <span class="mx-2"> | Alamat : {{ $sewa_active->kos->alamat_kos }}</span>
                                 </div>
@@ -143,7 +143,7 @@
                                             <div class="d-flex align-items-center">
                                                 <strong class="px-2 border rounded text-success"
                                                     style="font-size: 14px;">{{ $item->peruntukan }}</strong>
-                                                <i class="icon-star mx-2 text-success"></i> <b>5.0</b>
+                                                <i class="icon-star mx-2 text-success"></i> <b>{{App\Models\Rating::getRatingKos($item->id)}}</b> <small class="mx-1"> ( {{App\Models\Rating::where('id_kos',$item->id)->count()}} Ulasan )</small>
                                             </div>
                                             <span class="d-block mb-2 text-black-50">Pemilik : {{ $item->nama_pemilik }}
                                                 <b>({{ $item->alamat_kos }})</b>

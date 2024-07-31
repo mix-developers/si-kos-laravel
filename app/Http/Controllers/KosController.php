@@ -28,6 +28,30 @@ class KosController extends Controller
         ];
         return view('admin.kos.kos', $data);
     }
+    public function search(Request $request)
+    {
+        $query = Kos::query(); 
+    
+        if ($request->filled('price_min')) {
+            $query->where('harga_kos', '>=', $request->input('price_min'));
+        }
+    
+        if ($request->filled('price_max')) {
+            $query->where('harga_kos', '<=', $request->input('price_max'));
+        }
+    
+        if ($request->filled('peruntukan')) {
+            $query->where('peruntukan', $request->input('peruntukan'));
+        }
+    
+        $kos = $query->get(); 
+    
+        return view('pages.pencarian.hasil_cari', [
+            'kos' => $kos,
+            'title' => 'Hasil Pencarian'
+        ]); 
+    }
+    
     public function getKosDataTable()
     {
         $Kos = Kos::orderByDesc('id');

@@ -19,28 +19,5 @@
             </div>
         </div>
     </div>
-    <section class="section">
-        <div class="container">
-            <form action="#">
-                <div class="row">
-                    <div class="col-6 mb-3">
-                        <input type="text" class="form-control" placeholder="Your Name">
-                    </div>
-                    <div class="col-6 mb-3">
-                        <input type="email" class="form-control" placeholder="Your Email">
-                    </div>
-                    <div class="col-12 mb-3">
-                        <input type="text" class="form-control" placeholder="Subject">
-                    </div>
-                    <div class="col-12 mb-3">
-                        <textarea name="" id="" cols="30" rows="7" class="form-control" placeholder="Message"></textarea>
-                    </div>
-
-                    <div class="col-12">
-                        <input type="submit" value="Send Message" class="btn btn-primary">
-                    </div>
-                </div>
-            </form>
-        </div>
-    </section>
+ @include('pages.pencarian.form_cari')
 @endsection

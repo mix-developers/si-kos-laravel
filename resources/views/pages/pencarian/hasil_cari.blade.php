@@ -19,23 +19,17 @@
             </div>
         </div>
     </div>
+    @include('pages.pencarian.form_cari')
+    <hr>
     <div class="section">
         <div class="container">
-            <div class="row mb-5 align-items-center">
-                <div class="col-lg-6">
-                    <h2 class="font-weight-bold text-primary heading">
-                        Semua KOS
-                    </h2>
-                </div>
-                <div class="col-lg-6 text-lg-end">
-                    <p>
-                        <a href="{{ url('/cari-kos') }}" class="btn btn-primary text-white py-3 px-4">Cari
-                            KOS</a>
-                    </p>
-                </div>
-            </div>
+           
             <div class="row justify-content-center">
-
+                @if($kos->count()==0)
+                <div class="col-12">
+                    <h4 class="text-mutted text-center">Kos yang anda cari tidak ditemukan, silahkan coba cari lagi yah...</h4>
+                </div>
+                @endif
                 @foreach ($kos as $item)
                     <div class="col-lg-4 col-md-6">
 

@@ -78,6 +78,12 @@
                     <div data-i18n="Analytics">Data Fasilitas</div>
                 </a>
             </li>
+            <li class="menu-item {{ request()->is('lokasi') ? 'active' : '' }}">
+                <a href="{{ url('/lokasi') }}" class="menu-link">
+                    <i class="menu-icon tf-icons bx bx-map"></i>
+                    <div data-i18n="Analytics">Data Lokasi</div>
+                </a>
+            </li>
             <li class="menu-header small text-uppercase">
                 <span class="menu-header-text">Data KOS</span>
             </li>
@@ -116,6 +122,12 @@
                 <a href="{{ url('/sewa') }}" class="menu-link">
                     <i class="menu-icon tf-icons bx bx-street-view"></i>
                     <div data-i18n="Analytics">Penyewaan</div>
+                </a>
+            </li>
+            <li class="menu-item {{ request()->is('rating') ? 'active' : '' }}">
+                <a href="{{ url('/rating') }}" class="menu-link">
+                    <i class="menu-icon tf-icons bx bx-star"></i>
+                    <div data-i18n="Analytics">Rating & Ulasan</div>
                 </a>
             </li>
         @endif

@@ -61,7 +61,7 @@
                                             <div class="d-flex align-items-center">
                                                 <strong class="px-2 border rounded text-success"
                                                     style="font-size: 14px;">{{ $item->peruntukan }}</strong>
-                                                <i class="icon-star mx-2 text-success"></i> <b>5.0</b>
+                                                <i class="icon-star mx-2 text-success"></i> <b>{{App\Models\Rating::getRatingKos($item->id)}}</b> <small class="mx-1"> ( {{App\Models\Rating::where('id_kos',$item->id)->count()}} Ulasan )</small>
                                             </div>
                                             <span class="d-block mb-2 text-black-50">Pemilik : {{ $item->nama_pemilik }}
                                                 <b>({{ $item->alamat_kos }})</b>
@@ -117,25 +117,25 @@
             <div class="row section-counter mt-5 text-center">
                 <div class="col-6 col-sm-6 col-md-6 col-lg-3" data-aos="fade-up" data-aos-delay="300">
                     <div class="counter-wrap mb-5 mb-lg-0">
-                        <span class="number"><span class="countup text-white">3298</span></span>
+                        <span class="number"><span class="countup text-white">{{App\Models\User::where('role','Pemilik_kos')->count()}}</span></span>
                         <span class="caption text-white-50"># Pemilik KOS</span>
                     </div>
                 </div>
                 <div class="col-6 col-sm-6 col-md-6 col-lg-3" data-aos="fade-up" data-aos-delay="400">
                     <div class="counter-wrap mb-5 mb-lg-0">
-                        <span class="number"><span class="countup text-white">2181</span></span>
+                        <span class="number"><span class="countup text-white">{{App\Models\Kos::count()}}</span></span>
                         <span class="caption text-white-50"># KOS Terdaftar</span>
                     </div>
                 </div>
                 <div class="col-6 col-sm-6 col-md-6 col-lg-3" data-aos="fade-up" data-aos-delay="500">
                     <div class="counter-wrap mb-5 mb-lg-0">
-                        <span class="number"><span class="countup text-white">9316</span></span>
+                        <span class="number"><span class="countup text-white">{{App\Models\User::where('role','User')->count()}}</span></span>
                         <span class="caption text-white-50"># Pencari KOS</span>
                     </div>
                 </div>
                 <div class="col-6 col-sm-6 col-md-6 col-lg-3" data-aos="fade-up" data-aos-delay="600">
                     <div class="counter-wrap mb-5 mb-lg-0">
-                        <span class="number"><span class="countup text-white">7191</span></span>
+                        <span class="number"><span class="countup text-white">{{App\Models\SewaKos::where('is_verified',1)->count()}}</span></span>
                         <span class="caption text-white-50"># Penyewaan</span>
                     </div>
                 </div>

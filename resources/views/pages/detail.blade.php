@@ -27,7 +27,6 @@
                 <div class="img overlay" style="background-image: url('{{ Storage::url($kos->foto_6) }}')">
                 </div>
             @endif
-
         </div>
 
         <div class="container">
@@ -103,7 +102,7 @@
                     <div class="d-flex align-items-center mb-4">
                         <strong class="p-2 border rounded text-success"
                             style="font-size: 14px;">{{ $kos->peruntukan }}</strong>
-                        <i class="icon-star mx-2 text-success"></i> <b>5.0</b>
+                        <i class="icon-star mx-2 text-success"></i> <b>{{App\Models\Rating::getRatingKos($kos->id)}}</b>
                         <span class="mx-2"> | Pemilik : {{ $kos->nama_pemilik }}</span>
                         <span class="mx-2"> | Alamat : {{ $kos->alamat_kos }}</span>
                     </div>
@@ -165,8 +164,8 @@
                 </div>
                 <div class="col-lg-4 col-md-6">
                     @if (Auth::check())
+                        @if(Auth::user()->role == 'User')
                         @php
-
                             $tanggal_sewa = App\Models\SewaKos::where('id_user', Auth::user()->id)
                                 ->where('id_kos', $kos->id)
                                 ->latest()
@@ -182,8 +181,79 @@
                                 ->where('tanggal_sewa', '<=', $tanggal_akhir)
                                 ->where('id_kos', $kos->id)
                                 ->count();
+
+                            $check_rating = App\Models\Rating::where('id_kos',$kos->id)->where('id_user',Auth::id())->count();
+                            $ulasan = App\Models\Rating::where('id_kos',$kos->id)->where('id_user',Auth::id())->first();
                         @endphp
-                        @if ($check_kos_aktif == 0)
+                            @if ($check_kos_aktif == 0)
+                                <form action="{{ route('sewa.ajukan') }}" method="GET">
+                                    <div class="p-3 shadow-lg">
+                                        <div class="d-flex align-items-center mb-3">
+                                            <h2 class="mx-2 fw-bold">Rp {{ number_format($kos->harga_kos) }}</h2>
+                                            (per-bulan)
+                                        </div>
+                                        <input type="hidden" name="id_kos" value="{{ $kos->id }}">
+                                        <div class="mb-3">
+                                            <label>Tanggal masuk</label>
+                                            <input type="date" class="form-control form-lg" name="tanggal" required>
+                                        </div>
+                                        <div class="mb-3">
+                                            <a href="https://wa.me/" class="btn  btn-warning" style="display: block;"><i
+                                                    class="icon-phone"></i>
+                                                Tanya
+                                                Pemilik KOS</a>
+                                        </div>
+                                        <div class="mb-3">
+                                            <button type="submit" class="btn btn-primary btn-block"
+                                                style="display: block; width:100%;">Ajukan
+                                                Sewa</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            @else
+                                <div class="p-3 shadow-lg text-center">
+                                    <h5>Anda telah menyewa KOS ini hingga <br><b>{{ $tanggal_akhir }}</b></h5>
+                                </div>
+                                {{-- rating dan ulasan pengguna --}}
+                                @if($check_rating == 0)
+                                    <div class="mt-4">
+                                        <div class="p-3 border bg-white shadow">
+                                            <h6 class="text-primary mb-3">Bantu pemilik KOS untuk meningkatkan pelayanan KOS dengan menulis ulasan dan rating dari kamu</h6>
+                                            <form action="{{route('rating.store')}}" method="POST" enctype="multipart/form-data">
+                                                @csrf
+                                                <input type="hidden" name="id_kos" value="{{$kos->id}}">
+                                                <div class="mb-3">
+                                                    <label>Rating</label>
+                                                    <input type="number" name="rating" class="form-control" max="5" min="1" required>
+                                                    <small>Berikan rating kamu dari 1 sampai 5 berdasarkan pengalaman kamu</small>
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label>Ulasan Anda</label>
+                                                    <textarea class="form-control" name="ulasan" required></textarea>
+                                                </div>
+                                                <div class="mb-3">
+                                                    <button type="submit" class="btn btn-primary">Submit</button>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                 @else
+                                 <div class="mt-4">
+                                    <div class="p-3 border bg-white shadow">
+                                        <h6 class="text-primary mb-3">Terimakasih anda telah membantu pemilik KOS ini dengan memberikan rating dan ulasan kamu..</h6>
+                                        <div class="border p-2">
+                                            @for($i=1; $i<=$ulasan->rating; $i++)
+                                                <i class="icon-star text-success"></i>
+                                            @endfor
+                                            <b class="mx-2 text-success">({{$ulasan->rating}} Rating)</b>
+                                            <br>
+                                            <p>Ulasan : {{$ulasan->ulasan}}</p>
+                                        </div>
+                                    </div>
+                                 </div>
+                                 @endif
+                            @endif
+                        @else
                             <form action="{{ route('sewa.ajukan') }}" method="GET">
                                 <div class="p-3 shadow-lg">
                                     <div class="d-flex align-items-center mb-3">
@@ -200,18 +270,14 @@
                                                 class="icon-phone"></i>
                                             Tanya
                                             Pemilik KOS</a>
-                                    </div>
+                                    <!-- </div>
                                     <div class="mb-3">
                                         <button type="submit" class="btn btn-primary btn-block"
                                             style="display: block; width:100%;">Ajukan
                                             Sewa</button>
-                                    </div>
+                                    </div> -->
                                 </div>
                             </form>
-                        @else
-                            <div class="p-3 shadow-lg text-center">
-                                <h5>Anda telah menyewa KOS ini hingga <br><b>{{ $tanggal_akhir }}</b></h5>
-                            </div>
                         @endif
                     @else
                         <form action="{{ route('sewa.ajukan') }}" method="GET">
@@ -239,6 +305,25 @@
                             </div>
                         </form>
                     @endif
+                    <div class="mt-4">
+                        <div class="d-flex align-items-center mb-3">
+                            <h6 class="text-primary">Rating dan Ulasan pengguna </b>
+                             <small class="mx-1"> ({{App\Models\Rating::where('id_kos',$kos->id)->count()}} Ulasan )</small>
+                        </div>
+                        @foreach (App\Models\Rating::with(['user'])->where('id_kos',$kos->id)->latest()->limit(5)->get() as $item)
+                            <div class="p-2 border" >
+                                @for($i=1; $i<=$item->rating; $i++)
+                                     <i class="icon-star text-success"></i>
+                                 @endfor
+                                <b class="mx-2 text-success">({{$item->rating}} Rating)</b>
+                                <br>
+                                <strong>{{$item->user->name}} : </strong>
+                                <br>
+                                 <p class="mb-1">" {{$item->ulasan}} "</p>
+                                 <small>{{$item->created_at->diffForHumans()}}</small>
+                            </div>
+                        @endforeach
+                    </div>
                 </div>
             </div>
         </div>

@@ -6,6 +6,8 @@ use App\Http\Controllers\KosController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SewaController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\LokasiController;
+use App\Http\Controllers\RatingController;
 use App\Models\Kos;
 use App\Models\SewaKos;
 use Illuminate\Support\Facades\Auth;
@@ -57,10 +59,13 @@ Route::middleware(['auth:web', 'role:User', 'verified'])->group(function () {
         return view('pages.akun', ['title' => $title]);
     });
 });
+Route::get('/search-kos', [KosController::class, 'search'])->name('search-kos');
+
 Route::middleware(['auth:web', 'role:User', 'verified'])->group(function () {
     Route::get('/kos-saya',  [SewaController::class, 'kos_user'])->name('kos-saya');
     Route::get('/sewa/ajukan',  [SewaController::class, 'ajukan'])->name('sewa.ajukan');
     Route::post('/sewa/store',  [SewaController::class, 'store'])->name('sewa.store');
+    Route::post('/rating/store',  [RatingController::class, 'store'])->name('rating.store');
 });
 Route::middleware(['auth:web', 'role:Pemilik_kos', 'verified'])->group(function () {
     //sewa managemen
@@ -81,6 +86,10 @@ Route::middleware(['auth:web', 'role:Pemilik_kos', 'verified'])->group(function 
     Route::get('/fasilitas-tambahan-datatable/{id_kos}', [KosController::class, 'getFasilitasTambahanDataTable']);
 });
 Route::middleware(['auth:web', 'role:Admin,Pemilik_kos', 'verified'])->group(function () {
+    //rating management
+    Route::get('/rating', [RatingController::class, 'index'])->name('rating');
+    Route::get('/rating-datatable', [RatingController::class, 'getRatingDataTable']);
+    //sewa management
     Route::get('/sewa/detail/{id}', [SewaController::class, 'detail'])->name('sewa.detail');
     Route::get('/sewa-datatable', [SewaController::class, 'getSewaDataTable']);
 });
@@ -88,6 +97,15 @@ Route::middleware(['auth:web', 'role:Admin', 'verified'])->group(function () {
     //kos managemen
     Route::get('/kos', [KosController::class, 'index'])->name('kos');
     Route::delete('/kos/delete/{id}',  [KosController::class, 'destroy'])->name('kos.delete');
+    //lokasi managemen
+    Route::get('/lokasi', [LokasiController::class, 'index'])->name('lokasi');
+    Route::post('/lokasi/store_kelurahan',  [LokasiController::class, 'store_kelurahan'])->name('lokasi.store_kelurahan');
+    Route::post('/lokasi/store_jalan',  [LokasiController::class, 'store_jalan'])->name('lokasi.store_jalan');
+    Route::get('/lokasi/edit/{id}',  [LokasiController::class, 'edit'])->name('lokasi.edit');
+    Route::delete('/lokasi/delete_kelurahan/{id}',  [LokasiController::class, 'destroy_kelurahan'])->name('lokasi.delete_kelurahan');
+    Route::delete('/lokasi/delete_jalan/{id}',  [LokasiController::class, 'destroy_jalan'])->name('lokasi.delete_jalan');
+    Route::get('/kelurahan-datatable', [LokasiController::class, 'getKelurahanDataTable']);
+    Route::get('/jalan-datatable', [LokasiController::class, 'getJalanDataTable']);
     //fasilitas managemen
     Route::get('/fasilitas', [FasilitasKosController::class, 'index'])->name('fasilitas');
     Route::post('/fasilitas/store',  [FasilitasKosController::class, 'store'])->name('fasilitas.store');
