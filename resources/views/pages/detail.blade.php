@@ -195,7 +195,7 @@
                                         ->first();
                                 }
                             @endphp
-                            @if ($sewa != 0)
+                            @if ($cek_sewa != 0)
                                 @if ($check_kos_aktif == 0)
                                     <form action="{{ route('sewa.ajukan') }}" method="GET">
                                         <div class="p-3 shadow-lg">
@@ -290,11 +290,11 @@
                                                 Tanya
                                                 Pemilik KOS</a>
                                             <!-- </div>
-                                                    <div class="mb-3">
-                                                        <button type="submit" class="btn btn-primary btn-block"
-                                                            style="display: block; width:100%;">Ajukan
-                                                            Sewa</button>
-                                                    </div> -->
+                                                        <div class="mb-3">
+                                                            <button type="submit" class="btn btn-primary btn-block"
+                                                                style="display: block; width:100%;">Ajukan
+                                                                Sewa</button>
+                                                        </div> -->
                                         </div>
                                 </form>
                             @endif
@@ -316,11 +316,11 @@
                                             Tanya
                                             Pemilik KOS</a>
                                         <!-- </div>
-                                                <div class="mb-3">
-                                                    <button type="submit" class="btn btn-primary btn-block"
-                                                        style="display: block; width:100%;">Ajukan
-                                                        Sewa</button>
-                                                </div> -->
+                                                    <div class="mb-3">
+                                                        <button type="submit" class="btn btn-primary btn-block"
+                                                            style="display: block; width:100%;">Ajukan
+                                                            Sewa</button>
+                                                    </div> -->
                                     </div>
                             </form>
                         @endif
