@@ -46,44 +46,46 @@
         </div>
     </div>
 </div>
-<div class="modal fade" id="create-fasilitas-tambahan" tabindex="-1" aria-labelledby="customersModalLabel"
-    aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="userModalLabel">Fasilitas Tambahan</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <!-- Form for Create and Edit -->
-                <form id="createFasilitasTambahanForm">
-                    <input type="hidden" name="id_kos" id="idKos" value="{{ $kos ? $kos->id : null }}">
-                    <div class="mb-3">
-                        <label for="formCustomerName" class="form-label">Nama Fasilitas</label>
-                        <input type="text" class="form-control" id="formCustomerName" name="nama_fasilitas"
-                            placeholder="Nama Fasilitas" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="formCustomerName" class="form-label">Jumlah Fasilitas</label>
-                        <input type="number" class="form-control" id="formCustomerName" name="jumlah" value="1"
-                            required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="formCustomerName" class="form-label">Kepemilikan Fasilitas</label>
-                        <select name="milik" class="form-select">
-                            <option value="Pribadi">Pribadi</option>
-                            <option value="Bersama">Bersama</option>
-                        </select>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" id="createFasilitasTambahanBtn">Save</button>
+@if (Auth::user()->role == 'Pemilik_kos')
+    <div class="modal fade" id="create-fasilitas-tambahan" tabindex="-1" aria-labelledby="customersModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="userModalLabel">Fasilitas Tambahan</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <!-- Form for Create and Edit -->
+                    <form id="createFasilitasTambahanForm">
+                        <input type="hidden" name="id_kos" id="idKos" value="{{ $kos ? $kos->id : null }}">
+                        <div class="mb-3">
+                            <label for="formCustomerName" class="form-label">Nama Fasilitas</label>
+                            <input type="text" class="form-control" id="formCustomerName" name="nama_fasilitas"
+                                placeholder="Nama Fasilitas" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="formCustomerName" class="form-label">Jumlah Fasilitas</label>
+                            <input type="number" class="form-control" id="formCustomerName" name="jumlah"
+                                value="1" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="formCustomerName" class="form-label">Kepemilikan Fasilitas</label>
+                            <select name="milik" class="form-select">
+                                <option value="Pribadi">Pribadi</option>
+                                <option value="Bersama">Bersama</option>
+                            </select>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id="createFasilitasTambahanBtn">Save</button>
+                </div>
             </div>
         </div>
     </div>
-</div>
+@endif
 <div class="modal fade" id="editFasiliasUmumModal" tabindex="-1" aria-labelledby="customersModalLabel"
     aria-hidden="true">
     <div class="modal-dialog">

@@ -122,7 +122,7 @@ class SewaController extends Controller
             if ($sewa->save()) {
                 $cek_pintu2 = SewaKos::tersedia($sewa->id_kos);
                 if ($cek_pintu2 == 0) {
-                    $kos = Kos::find('id', $sewa->id_kos);
+                    $kos = Kos::find($sewa->id_kos);
                     $kos->status = 'Close';
                     $kos->save();
                 }
