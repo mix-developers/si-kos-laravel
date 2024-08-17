@@ -1,5 +1,13 @@
 @extends('layouts.frontend.app')
+@push('css')
+    <!-- Tambahkan di dalam <head> -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-fullscreen/dist/Leaflet.fullscreen.css" />
 
+    <!-- Tambahkan di bagian bawah <body> sebelum penutup </body> -->
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/leaflet-fullscreen/dist/Leaflet.fullscreen.min.js"></script>
+@endpush
 @section('content')
     <div class="hero">
         <div class="hero-slide">
@@ -161,6 +169,14 @@
                     <p class="p-3 border">
                         {{ $kos->keterangan_kos }}
                     </p>
+                    <h3 class="fw-bold">Peta Kos</h3>
+                    <div class="p-3 border">
+                        @if ($kos->latitude == 0)
+                            <p>Pemilik belum menyertakan lokasi pada peta</p>
+                        @else
+                            <div id="map" style="height: 500px;"></div>
+                        @endif
+                    </div>
                 </div>
                 <div class="col-lg-4 col-md-6">
                     @if (Auth::check())
@@ -290,11 +306,11 @@
                                                 Tanya
                                                 Pemilik KOS</a>
                                             <!-- </div>
-                                                        <div class="mb-3">
-                                                            <button type="submit" class="btn btn-primary btn-block"
-                                                                style="display: block; width:100%;">Ajukan
-                                                                Sewa</button>
-                                                        </div> -->
+                                                                                                                                    <div class="mb-3">
+                                                                                                                                        <button type="submit" class="btn btn-primary btn-block"
+                                                                                                                                            style="display: block; width:100%;">Ajukan
+                                                                                                                                            Sewa</button>
+                                                                                                                                    </div> -->
                                         </div>
                                 </form>
                             @endif
@@ -316,11 +332,11 @@
                                             Tanya
                                             Pemilik KOS</a>
                                         <!-- </div>
-                                                    <div class="mb-3">
-                                                        <button type="submit" class="btn btn-primary btn-block"
-                                                            style="display: block; width:100%;">Ajukan
-                                                            Sewa</button>
-                                                    </div> -->
+                                                                                                                                <div class="mb-3">
+                                                                                                                                    <button type="submit" class="btn btn-primary btn-block"
+                                                                                                                                        style="display: block; width:100%;">Ajukan
+                                                                                                                                        Sewa</button>
+                                                                                                                                </div> -->
                                     </div>
                             </form>
                         @endif
@@ -375,3 +391,42 @@
         </div>
     </section>
 @endsection
+@push('js')
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Membuat peta dan menentukan pusat awal serta zoom level
+            var map = L.map('map').setView([-8.504556, 140.402424], 13);
+
+            // Menambahkan layer peta jalan (OpenStreetMap)
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            }).addTo(map);
+
+            // Menambahkan layer peta satelit (Esri)
+            var Esri_WorldImagery = L.tileLayer(
+                'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+                    attribution: '&copy; <a href="https://www.esri.com/en-us/home">Esri</a>'
+                });
+
+            // Layer control untuk memilih antara jalan dan satelit
+            var baseLayers = {
+                "Streets": L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'),
+                "Satellite": Esri_WorldImagery
+            };
+            L.control.layers(baseLayers).addTo(map);
+
+            // Menambahkan kontrol zoom dan fullscreen
+
+            L.control.fullscreen().addTo(map);
+
+            // Mengambil data marker dari server
+            L.marker([{{ $kos->latitude != 0 ? $kos->latitude : '' }},
+                    {{ $kos->longitude != 0 ? $kos->longitude : '' }}
+                ])
+                .addTo(map)
+                .bindPopup(
+                    '<b>{{ $kos->nama_kos }}</b><br>Rp {{ number_format($kos->harga_kos) }}<br>{{ $kos->id_jalan != null ? $kos->jalan->jalan : '' }}<hr><a href="https://www.google.com/maps/dir/?api=1&destination={{ $kos->latitude }},{{ $kos->longitude }}" target="__blank" class="btn btn-sm btn-warning py-1 px-2 mx-1">Rute Menuju Kos</a>'
+                );
+        });
+    </script>
+@endpush

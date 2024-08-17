@@ -29,6 +29,7 @@
                 </div>
                 <div class="col-lg-6 text-lg-end">
                     <p>
+                        <a href="{{ url('/maps-kos') }}" class="btn btn-warning text-white py-3 px-4">Lihat Peta</a>
                         <a href="{{ url('/cari-kos') }}" class="btn btn-primary text-white py-3 px-4">Cari
                             KOS</a>
                     </p>
@@ -52,7 +53,9 @@
                                     <div class="d-flex align-items-center">
                                         <strong class="px-2 border rounded text-success"
                                             style="font-size: 14px;">{{ $item->peruntukan }}</strong>
-                                        <i class="icon-star mx-2 text-success"></i> <b>{{App\Models\Rating::getRatingKos($item->id)}} </b> <small class="mx-1"> ( {{App\Models\Rating::where('id_kos',$item->id)->count()}} Ulasan )</small>
+                                        <i class="icon-star mx-2 text-success"></i>
+                                        <b>{{ App\Models\Rating::getRatingKos($item->id) }} </b> <small class="mx-1"> (
+                                            {{ App\Models\Rating::where('id_kos', $item->id)->count() }} Ulasan )</small>
                                     </div>
                                     <span class="d-block mb-2 text-black-50">Pemilik : {{ $item->nama_pemilik }}
                                         <b>({{ $item->alamat_kos }})</b>

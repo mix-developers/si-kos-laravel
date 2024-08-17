@@ -152,6 +152,35 @@
                             <label for="keterangan_kos">Alamat Kos <span class="text-danger">*</span></label>
                             <textarea class="form-control" name="alamat_kos" required>{{ $kos->alamat_kos }}</textarea>
                         </div>
+                        <div class="mb-3">
+                            <label>Pilih Nama Jalan</label>
+                            <select name="id_jalan" class="form-select">
+                                @foreach (App\Models\Jalan::all() as $item)
+                                    <option value="{{ $item->id }}">{{ $item->jalan }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+
+                        <!-- Tambahkan div untuk peta -->
+                        <div class="mb-3">
+                            <label>Lokasi Kos</label>
+                            <div id="map" style="height: 400px;"></div>
+                        </div>
+
+                        <!-- Input untuk Latitude dan Longitude -->
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label>Latitude <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" name="latitude" id="latitude"
+                                    placeholder="Latitude" required value="{{ $kos->latitude }}" readonly>
+                            </div>
+                            <div class="col-md-6">
+                                <label>Longitude <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" name="longitude" id="longitude"
+                                    placeholder="Longitude" required value="{{ $kos->longitude }}" readonly>
+                            </div>
+                        </div>
+
                     </div>
                     <div class="card-footer">
                         <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
@@ -235,6 +264,72 @@
     @include('admin.kos.components.modal')
 @endsection
 @push('js')
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/leaflet-fullscreen/dist/Leaflet.fullscreen.min.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-fullscreen/dist/Leaflet.fullscreen.css" />
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Ambil nilai latitude dan longitude dari data
+            var latitude = {{ $kos->latitude ?? '0' }};
+            var longitude = {{ $kos->longitude ?? '0' }};
+
+            // Tentukan nilai default untuk latitude dan longitude
+            var defaultLatitude = -8.504556;
+            var defaultLongitude = 140.402424;
+
+            // Atur nilai posisi peta berdasarkan data
+            var mapCenter = [latitude != 0 ? latitude : defaultLatitude,
+                longitude != 0 ? longitude : defaultLongitude
+            ];
+
+            // Inisialisasi peta
+            var map = L.map('map').setView(mapCenter, 13);
+
+            // Menambahkan layer peta jalan (OpenStreetMap)
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            }).addTo(map);
+
+            // Menambahkan layer peta satelit (Esri)
+            var Esri_WorldImagery = L.tileLayer(
+                'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+                    attribution: '&copy; <a href="https://www.esri.com/en-us/home">Esri</a>'
+                });
+
+            // Menambahkan kontrol layer untuk memilih antara jalan dan satelit
+            var baseLayers = {
+                "Streets": L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'),
+                "Satellite": Esri_WorldImagery
+            };
+            L.control.layers(baseLayers).addTo(map);
+
+            // Menambahkan kontrol zoom dan fullscreen
+            L.control.zoom({
+                position: 'topright'
+            }).addTo(map);
+            L.control.fullscreen().addTo(map);
+
+            // Marker
+            var marker = L.marker([{{ $kos->latitude ?? '51.505' }}, {{ $kos->longitude ?? '-0.09' }}]).addTo(
+                map);
+
+            // Fungsi untuk memperbarui input latitude dan longitude
+            function updateLatLng(e) {
+                document.getElementById('latitude').value = e.latlng.lat;
+                document.getElementById('longitude').value = e.latlng.lng;
+            }
+
+            // Menambahkan event listener pada map untuk mengupdate marker dan input saat peta diklik
+            map.on('click', function(e) {
+                marker.setLatLng(e.latlng).bindPopup("Latitude: " + e.latlng.lat + "<br>Longitude: " + e
+                    .latlng.lng).openPopup();
+                updateLatLng(e);
+            });
+        });
+    </script>
+
     <script>
         $(function() {
             $('#datatable-fasilitas-umum').DataTable({

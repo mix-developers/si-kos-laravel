@@ -43,6 +43,11 @@ Route::get('/cari-kos', function () {
     $title = 'Cari Kos';
     return view('pages.cari', ['title' => $title]);
 });
+Route::get('/maps-kos', function () {
+    $title = 'Peta Sebaran Kos';
+    return view('pages.maps', ['title' => $title]);
+});
+Route::get('/search-kos', [KosController::class, 'search'])->name('search-kos');
 Auth::routes(['verify' => true]);
 Auth::routes();
 Route::middleware(['auth:web', 'verified'])->group(function () {
@@ -59,7 +64,6 @@ Route::middleware(['auth:web', 'role:User', 'verified'])->group(function () {
         return view('pages.akun', ['title' => $title]);
     });
 });
-Route::get('/search-kos', [KosController::class, 'search'])->name('search-kos');
 
 Route::middleware(['auth:web', 'role:User', 'verified'])->group(function () {
     Route::get('/kos-saya',  [SewaController::class, 'kos_user'])->name('kos-saya');
@@ -101,7 +105,8 @@ Route::middleware(['auth:web', 'role:Admin', 'verified'])->group(function () {
     Route::get('/lokasi', [LokasiController::class, 'index'])->name('lokasi');
     Route::post('/lokasi/store_kelurahan',  [LokasiController::class, 'store_kelurahan'])->name('lokasi.store_kelurahan');
     Route::post('/lokasi/store_jalan',  [LokasiController::class, 'store_jalan'])->name('lokasi.store_jalan');
-    Route::get('/lokasi/edit/{id}',  [LokasiController::class, 'edit'])->name('lokasi.edit');
+    Route::get('/lokasi/edit_jalan/{id}',  [LokasiController::class, 'edit_jalan'])->name('lokasi.edit_jalan');
+    Route::get('/lokasi/edit_kelurahan/{id}',  [LokasiController::class, 'edit_kelurahan'])->name('lokasi.edit_kelurahan');
     Route::delete('/lokasi/delete_kelurahan/{id}',  [LokasiController::class, 'destroy_kelurahan'])->name('lokasi.delete_kelurahan');
     Route::delete('/lokasi/delete_jalan/{id}',  [LokasiController::class, 'destroy_jalan'])->name('lokasi.delete_jalan');
     Route::get('/kelurahan-datatable', [LokasiController::class, 'getKelurahanDataTable']);

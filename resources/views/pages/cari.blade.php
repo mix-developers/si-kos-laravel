@@ -1,5 +1,6 @@
 @extends('layouts.frontend.app')
 
+
 @section('content')
     <div class="hero page-inner overlay" style="background-image: url('{{ asset('frontend_theme') }}/images/hero_bg_1.jpg')">
         <div class="container">
@@ -19,5 +20,5 @@
             </div>
         </div>
     </div>
- @include('pages.pencarian.form_cari')
+    @include('pages.pencarian.form_cari')
 @endsection

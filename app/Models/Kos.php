@@ -14,7 +14,7 @@ class Kos extends Model
 
     public function keluarahan(): BelongsTo
     {
-        return $this->belongsTo(keluarahan::class, 'id_keluarahan');
+        return $this->belongsTo(Kelurahan::class, 'id_keluarahan');
     }
     public function jalan(): BelongsTo
     {

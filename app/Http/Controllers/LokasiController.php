@@ -29,7 +29,7 @@ class LokasiController extends Controller
     }
     public function getJalanDataTable()
     {
-        $jalan = Jalan::orderByDesc('id');
+        $jalan = Jalan::with(['kelurahan'])->orderByDesc('id');
 
         return DataTables::of($jalan)
             ->addColumn('action', function ($jalan) {
@@ -38,7 +38,7 @@ class LokasiController extends Controller
             ->rawColumns(['action'])
             ->make(true);
     }
-     public function store_kelurahan(Request $request)
+    public function store_kelurahan(Request $request)
     {
         $request->validate([
             'kelurahan' => 'required|string|max:255',
@@ -63,7 +63,7 @@ class LokasiController extends Controller
 
         return response()->json(['message' => $message]);
     }
-     public function store_jalan(Request $request)
+    public function store_jalan(Request $request)
     {
         $request->validate([
             'id_kelurahan' => 'required|string|max:255',
@@ -113,5 +113,25 @@ class LokasiController extends Controller
         $customers->delete();
 
         return response()->json(['message' => 'jalan deleted successfully']);
+    }
+    public function edit_jalan($id)
+    {
+        $customer = Jalan::find($id);
+
+        if (!$customer) {
+            return response()->json(['message' => 'jalan not found'], 404);
+        }
+
+        return response()->json($customer);
+    }
+    public function edit_kelurahan($id)
+    {
+        $customer = Kelurahan::find($id);
+
+        if (!$customer) {
+            return response()->json(['message' => 'kelurahan not found'], 404);
+        }
+
+        return response()->json($customer);
     }
 }

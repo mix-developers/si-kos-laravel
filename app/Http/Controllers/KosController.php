@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\FasilitasTambahanKos;
 use App\Models\FasilitasUmumKos;
+use App\Models\Jalan;
+use App\Models\Kelurahan;
 use App\Models\Kos;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -30,28 +32,31 @@ class KosController extends Controller
     }
     public function search(Request $request)
     {
-        $query = Kos::query(); 
-    
+        $query = Kos::query();
+
         if ($request->filled('price_min')) {
             $query->where('harga_kos', '>=', $request->input('price_min'));
         }
-    
+        if ($request->filled('id_jalan')) {
+            $query->where('id_jalan', '>=', $request->input('id_jalan'));
+        }
+
         if ($request->filled('price_max')) {
             $query->where('harga_kos', '<=', $request->input('price_max'));
         }
-    
+
         if ($request->filled('peruntukan')) {
             $query->where('peruntukan', $request->input('peruntukan'));
         }
-    
-        $kos = $query->get(); 
-    
+
+        $kos = $query->get();
+
         return view('pages.pencarian.hasil_cari', [
             'kos' => $kos,
             'title' => 'Hasil Pencarian'
-        ]); 
+        ]);
     }
-    
+
     public function getKosDataTable()
     {
         $Kos = Kos::orderByDesc('id');
@@ -92,6 +97,7 @@ class KosController extends Controller
             'foto_2' => 'required|image|max:5248', // foto_2 harus berupa file gambar (jpeg, png, bmp, gif, atau svg) dengan ukuran maksimum 2MB
             'foto_3' => 'required|image|max:5248', // foto_3 harus berupa file gambar (jpeg, png, bmp, gif, atau svg) dengan ukuran maksimum 2MB
             'nama_kos' => 'required|string|max:255',
+            'id_jalan' => 'required',
             'nama_pemilik' => 'required|string|max:255',
             'jumlah_pintu' => 'required|integer', // jumlah_pintu harus berupa bilangan bulat
             'harga_kos' => 'required|numeric', // harga_kos harus berupa bilangan numerik
@@ -128,24 +134,28 @@ class KosController extends Controller
         }
         $KosData = [
             'id_user' => Auth::id(),
+            'id_jalan' => $request->input('id_jalan'),
             'nama_kos' => $request->input('nama_kos'),
             'nama_pemilik' => $request->input('nama_pemilik'),
             'jumlah_pintu' => $request->input('jumlah_pintu'),
             'harga_kos' => $request->input('harga_kos'),
             'peruntukan' => $request->input('peruntukan'),
-            // 'latitude' => $request->input('latitude'),
-            // 'longitude' => $request->input('longitude'),
+            'latitude' => $request->input('latitude') ?? 0,
+            'longitude' => $request->input('longitude') ?? 0,
             'ketentuan_kos' => $request->input('ketentuan_kos'),
             'keterangan_kos' => $request->input('keterangan_kos'),
             'alamat_kos' => $request->input('alamat_kos'),
-            'latitude' => 0,
-            'longitude' => 0,
+            'latitude' => $request->input('latitude') ?? 0,
+            'longitude' => $request->input('longitude') ?? 0,
             'foto_1' => $fotoPaths['foto_1'],
             'foto_2' => $fotoPaths['foto_2'],
             'foto_3' => $fotoPaths['foto_3'],
             'slug' => $slug,
             'status' => 'Open',
         ];
+        //kelurahan
+        $jalan = Jalan::find($request->input('id_jalan'));
+        $KosData['id_kelurahan'] = $jalan->id_kelurahan;
         //simpan foto opsional
         if ($request->hasFile('foto_4')) {
             $file = $request->file('foto_4');
@@ -218,6 +228,7 @@ class KosController extends Controller
             'foto_2' => 'nullable|image|max:5248', // foto_2 harus berupa file gambar (jpeg, png, bmp, gif, atau svg) dengan ukuran maksimum 5MB
             'foto_3' => 'nullable|image|max:5248', // foto_3 harus berupa file gambar (jpeg, png, bmp, gif, atau svg) dengan ukuran maksimum 5MB
             'nama_kos' => 'required|string|max:255',
+            'id_jalan' => 'required',
             'nama_pemilik' => 'required|string|max:255',
             'jumlah_pintu' => 'required|integer', // jumlah_pintu harus berupa bilangan bulat
             'harga_kos' => 'required|numeric', // harga_kos harus berupa bilangan numerik
@@ -266,6 +277,7 @@ class KosController extends Controller
 
         // Update data kos
         $kos->id_user = Auth::id();
+        $kos->id_jalan = $request->input('id_jalan');
         $kos->nama_kos = $request->input('nama_kos');
         $kos->nama_pemilik = $request->input('nama_pemilik');
         $kos->jumlah_pintu = $request->input('jumlah_pintu');
@@ -274,10 +286,14 @@ class KosController extends Controller
         $kos->ketentuan_kos = $request->input('ketentuan_kos');
         $kos->keterangan_kos = $request->input('keterangan_kos');
         $kos->alamat_kos = $request->input('alamat_kos');
-        $kos->latitude = 0; // Anda mungkin ingin mengganti ini dengan nilai yang sesuai
-        $kos->longitude = 0; // Anda mungkin ingin mengganti ini dengan nilai yang sesuai
+        $kos->latitude = $request->input('latitude') ?? 0; // Anda mungkin ingin mengganti ini dengan nilai yang sesuai
+        $kos->longitude = $request->input('longitude') ?? 0; // Anda mungkin ingin mengganti ini dengan nilai yang sesuai
         $kos->slug = $slug;
         $kos->status = 'Open';
+
+        //kelurahan
+        $jalan = Jalan::find($request->input('id_jalan'));
+        $kos->id_kelurahan = $jalan->id_kelurahan;
 
         // Simpan path foto ke model
         $kos->foto_1 = $fotoPaths['foto_1'] ?? $kos->foto_1;

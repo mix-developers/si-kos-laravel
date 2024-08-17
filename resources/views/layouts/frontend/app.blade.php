@@ -27,6 +27,7 @@
     <title>
         {{ $title ?? '' . env('APP_NAME') }}
     </title>
+    @stack('css')
 </head>
 
 <body data-aos-easing="slide" data-aos-duration="800" data-aos-delay="0">
@@ -56,6 +57,7 @@
     <script src="{{ asset('frontend_theme') }}/js/navbar.js"></script>
     <script src="{{ asset('frontend_theme') }}/js/counter.js"></script>
     <script src="{{ asset('frontend_theme') }}/js/custom.js"></script>
+    @stack('js')
 </body>
 
 </html>
