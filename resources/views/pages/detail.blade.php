@@ -230,7 +230,7 @@
                                                     required>
                                             </div>
                                             <div class="mb-3">
-                                                <a href="https://wa.me/" class="btn  btn-warning"
+                                                <a href="https://wa.me/{{ $kos->user->no_hp }}" class="btn  btn-warning"
                                                     style="display: block;"><i class="icon-phone"></i>
                                                     Tanya
                                                     Pemilik KOS</a>
@@ -291,6 +291,12 @@
                                             </div>
                                         </div>
                                     @endif
+                                    <div class="my-3">
+                                        <a href="https://wa.me/{{ $kos->user->no_hp }}" class="btn  btn-warning"
+                                            style="display: block;"><i class="icon-phone"></i>
+                                            Tanya
+                                            Pemilik KOS</a>
+                                    </div>
                                 @endif
                             @else
                                 <form action="{{ route('sewa.ajukan') }}" method="GET">
@@ -310,7 +316,7 @@
                                                 Tanya
                                                 Pemilik KOS</a>
                                             <!-- </div>
-                                                                                                                                                                                                                     </div> -->
+                                                                                                                                                                                                                                 </div> -->
                                         </div>
                                 </form>
                             @endif
@@ -332,11 +338,11 @@
                                             Tanya
                                             Pemilik KOS</a>
                                         <!-- </div>
-                                                                                                                                                                                                                            <div class="mb-3">
-                                                                                                                                                                                                                                <button type="submit" class="btn btn-primary btn-block"
-                                                                                                                                                                                                                                    style="display: block; width:100%;">Ajukan
-                                                                                                                                                                                                                                    Sewa</button>
-                                                                                                                                                                                                                            </div> -->
+                                                                                                                                                                                                                                        <div class="mb-3">
+                                                                                                                                                                                                                                            <button type="submit" class="btn btn-primary btn-block"
+                                                                                                                                                                                                                                                style="display: block; width:100%;">Ajukan
+                                                                                                                                                                                                                                                Sewa</button>
+                                                                                                                                                                                                                                        </div> -->
                                     </div>
                             </form>
                         @endif

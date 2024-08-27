@@ -20,4 +20,8 @@ class Kos extends Model
     {
         return $this->belongsTo(Jalan::class, 'id_jalan');
     }
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'id_user');
+    }
 }
