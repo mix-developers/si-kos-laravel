@@ -26,7 +26,13 @@
                             <tr>
                                 <th>ID</th>
                                 <th>Nama KOS</th>
-                                <th>Action</th>
+                                <th>Pemilik</th>
+                                <th>Pintu</th>
+                                <th>Harga</th>
+                                <th>Peruntukan</th>
+                                <th>Lokasi</th>
+                                <th>Status</th>
+                                <th>Lihat Kos</th>
                             </tr>
                         </thead>
 
@@ -34,7 +40,13 @@
                             <tr>
                                 <th>ID</th>
                                 <th>Nama KOS</th>
-                                <th>Action</th>
+                                <th>Pemilik</th>
+                                <th>Pintu</th>
+                                <th>Harga</th>
+                                <th>Peruntukan</th>
+                                <th>Lokasi</th>
+                                <th>Status</th>
+                                <th>Lihat Kos</th>
                             </tr>
                         </tfoot>
                     </table>

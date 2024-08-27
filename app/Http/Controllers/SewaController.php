@@ -7,6 +7,9 @@ use App\Models\SewaKos;
 use Illuminate\Auth\Events\Verified;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\SewaKosNotification;
+use App\Models\User;
 
 class SewaController extends Controller
 {
@@ -62,24 +65,27 @@ class SewaController extends Controller
         $kos =  Kos::find($request->input('id_kos'));
 
         $sewa = SewaKos::create($sewaData);
-        // Periksa keberhasilan pembuatan entri SewaKos
         if ($sewa) {
             session()->flash('success', 'Berhasil mengajukan sewa, periksa status pengajuan secara berkala untuk melihat verifikasi oleh pemilik.');
-            // Redirect pengguna ke halaman kos dengan slug yang sesuai
+            $ownerEmail = User::find($kos->id_user)->email;
+            Mail::to($ownerEmail)->send(new SewaKosNotification($sewa, $kos));
+
             return redirect()->to('kos/' . $kos->slug);
         } else {
             session()->flash('error', 'Gagal mengajukan sewa. Silakan coba lagi.');
             return redirect()->back();
         }
     }
-    public function getSewaDataTable()
+    public function getSewaDataTable(Request $request)
     {
         $sewa = SewaKos::orderByDesc('id');
         if (Auth::user()->role == 'Pemilik_kos') {
             $kos = Kos::where('id_user', Auth::user()->id)->first();
             $sewa = $sewa->where('id_kos', $kos->id);
         }
-
+        if ($request->input('jangka_waktu') != 0 && $request->input('jangka_waktu') != '') {
+            $sewa->where('jangka_waktu', $request->input('jangka_waktu'));
+        }
         return datatables()::of($sewa)
             ->addColumn('action', function ($sewa) {
                 $accept = '<button type="button" onclick="acceptAction(' . $sewa->id . ')" class="btn btn-sm btn-success mx-1">Terima</button>';

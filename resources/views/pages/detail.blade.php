@@ -120,6 +120,10 @@
                             href="https://api.whatsapp.com/send?text={{ urlencode('Dengan harga Rp ' . number_format($kos->harga_kos) . ' kamu sudah bisa sewa di kos : ' . $kos->nama_kos . ', yuk cek di sini : ' . url('/kos', $kos->slug)) }}"
                             target="_blank">Bagikan KOS ini ke rekan anda di
                             WhatsApp</a>
+                        <a href="javascript:void(0);" class="btn favorit-btn" data-item-id="{{ $kos->id }}">
+                            <i class="fa fa-heart {{ $isFavorited ? 'text-danger' : 'text-muted' }}"
+                                style="font-size: 30px;"></i>
+                        </a>
                     </div>
                     <hr>
                     <h3 class="fw-bold">KOS ini menyediakan</h3>
@@ -306,11 +310,7 @@
                                                 Tanya
                                                 Pemilik KOS</a>
                                             <!-- </div>
-                                                                                                                                    <div class="mb-3">
-                                                                                                                                        <button type="submit" class="btn btn-primary btn-block"
-                                                                                                                                            style="display: block; width:100%;">Ajukan
-                                                                                                                                            Sewa</button>
-                                                                                                                                    </div> -->
+                                                                                                                                                                                                                     </div> -->
                                         </div>
                                 </form>
                             @endif
@@ -332,11 +332,11 @@
                                             Tanya
                                             Pemilik KOS</a>
                                         <!-- </div>
-                                                                                                                                <div class="mb-3">
-                                                                                                                                    <button type="submit" class="btn btn-primary btn-block"
-                                                                                                                                        style="display: block; width:100%;">Ajukan
-                                                                                                                                        Sewa</button>
-                                                                                                                                </div> -->
+                                                                                                                                                                                                                            <div class="mb-3">
+                                                                                                                                                                                                                                <button type="submit" class="btn btn-primary btn-block"
+                                                                                                                                                                                                                                    style="display: block; width:100%;">Ajukan
+                                                                                                                                                                                                                                    Sewa</button>
+                                                                                                                                                                                                                            </div> -->
                                     </div>
                             </form>
                         @endif
@@ -392,6 +392,47 @@
     </section>
 @endsection
 @push('js')
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Fetch CSRF token from the meta tag in the HTML head
+            const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+            document.querySelectorAll('.favorit-btn').forEach(button => {
+                button.addEventListener('click', function() {
+                    const itemId = this.getAttribute('data-item-id');
+                    const icon = this.querySelector('i');
+
+                    // Perform an AJAX request to toggle favorite status
+                    fetch(`/toggle-favorite`, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRF-TOKEN': csrfToken
+                            },
+                            body: JSON.stringify({
+                                id_kos: itemId
+                            }) // Include the itemId in the request body
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.status === 'Ditambahkan') {
+                                icon.classList.remove('text-muted');
+                                icon.classList.add('text-danger');
+                            } else if (data.status === 'dihapus') {
+                                icon.classList.remove('text-danger');
+                                icon.classList.add('text-muted');
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                        });
+                });
+            });
+        });
+    </script>
+
+
+
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             // Membuat peta dan menentukan pusat awal serta zoom level

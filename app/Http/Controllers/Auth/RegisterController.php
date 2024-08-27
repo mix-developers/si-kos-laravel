@@ -51,8 +51,10 @@ class RegisterController extends Controller
         return Validator::make($data, [
             'role' => ['required', 'string', 'max:255'],
             'name' => ['required', 'string', 'max:255'],
+            'no_hp' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
+            'file_ktp' => ['nullable', 'file', 'mimes:jpeg,png,pdf', 'max:2048'],
         ]);
     }
 
@@ -64,11 +66,20 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
+        $file_ktp_path = null;
+        if (isset($data['file_ktp']) && $data['file_ktp'] instanceof \Illuminate\Http\UploadedFile) {
+            $file = $data['file_ktp'];
+            $filename = time() . '_' . $file->getClientOriginalName();
+            $file->storeAs('ktp', $filename, 'public');
+            $file_ktp_path = 'ktp/' . $filename;
+        }
         return User::create([
             'role' => $data['role'],
             'name' => $data['name'],
             'email' => $data['email'],
+            'no_hp' => $data['no_hp'],
             'password' => Hash::make($data['password']),
+            'file_ktp' => $file_ktp_path,
         ]);
     }
 }

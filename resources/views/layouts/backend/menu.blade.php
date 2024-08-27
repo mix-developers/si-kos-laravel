@@ -108,6 +108,21 @@
                     <div data-i18n="Analytics">Pemilik KOS</div>
                 </a>
             </li>
+            <li class="menu-header small text-uppercase">
+                <span class="menu-header-text">Laporan</span>
+            </li>
+            <li class="menu-item {{ request()->is('laporan/kos') ? 'active' : '' }}">
+                <a href="{{ url('/laporan/kos') }}" class="menu-link">
+                    <i class="menu-icon tf-icons bx bx-file"></i>
+                    <div data-i18n="Analytics">Laporan KOS</div>
+                </a>
+            </li>
+            <li class="menu-item {{ request()->is('laporan/sewa') ? 'active' : '' }}">
+                <a href="{{ url('/laporan/sewa') }}" class="menu-link">
+                    <i class="menu-icon tf-icons bx bx-file"></i>
+                    <div data-i18n="Analytics">Laporan Sewa</div>
+                </a>
+            </li>
         @else
             <li class="menu-header small text-uppercase">
                 <span class="menu-header-text">KOS</span>
@@ -128,6 +143,15 @@
                 <a href="{{ url('/rating') }}" class="menu-link">
                     <i class="menu-icon tf-icons bx bx-star"></i>
                     <div data-i18n="Analytics">Rating & Ulasan</div>
+                </a>
+            </li>
+            <li class="menu-header small text-uppercase">
+                <span class="menu-header-text">Laporan</span>
+            </li>
+            <li class="menu-item {{ request()->is('laporan/sewa') ? 'active' : '' }}">
+                <a href="{{ url('/laporan/sewa') }}" class="menu-link">
+                    <i class="menu-icon tf-icons bx bx-file"></i>
+                    <div data-i18n="Analytics">Laporan Sewa</div>
                 </a>
             </li>
         @endif

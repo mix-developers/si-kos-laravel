@@ -48,7 +48,7 @@
                 $('#datatable-sewa').DataTable().ajax.reload();
             });
 
-        });
+        });  
 
         function acceptAction(id) {
             $.ajax({

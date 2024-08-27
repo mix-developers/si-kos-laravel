@@ -12,9 +12,9 @@ class Kos extends Model
     protected $table = 'kos';
     protected $guarded = [];
 
-    public function keluarahan(): BelongsTo
+    public function kelurahan(): BelongsTo
     {
-        return $this->belongsTo(Kelurahan::class, 'id_keluarahan');
+        return $this->belongsTo(Kelurahan::class, 'id_kelurahan');
     }
     public function jalan(): BelongsTo
     {

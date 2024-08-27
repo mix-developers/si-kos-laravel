@@ -44,10 +44,20 @@
 
 
                     <div class="mb-3">
-                        <label for="email" class="form-label">Email</label>
+                        <label for="no_hp" class="form-label">Email</label>
                         <input type="email" class="form-control" id="email" name="email" placeholder="Alamat Email"
                             autofocus />
                         @error('email')
+                            <span class="text-danger" role="alert">
+                                <small>{{ $message }}</small>
+                            </span>
+                        @enderror
+                    </div>
+                    <div class="mb-3">
+                        <label for="no_hp" class="form-label">No. HP/WA (aktif)</label>
+                        <input type="no_hp" class="form-control" id="no_hp" name="no_hp" value="+62" autofocus
+                            required />
+                        @error('no_hp')
                             <span class="text-danger" role="alert">
                                 <small>{{ $message }}</small>
                             </span>

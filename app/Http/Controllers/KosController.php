@@ -57,15 +57,26 @@ class KosController extends Controller
         ]);
     }
 
-    public function getKosDataTable()
+    public function getKosDataTable(Request $request)
     {
-        $Kos = Kos::orderByDesc('id');
-
+        $Kos = Kos::with(['kelurahan', 'jalan'])->orderByDesc('id');
+        if ($request->has('id_kelurahan') && $request->input('id_kelurahan') != '') {
+            $Kos->where('id_kelurahan', $request->input('id_kelurahan'));
+        }
+        if ($request->has('id_jalan') && $request->input('id_jalan') != '') {
+            $Kos->where('id_jalan', $request->input('id_jalan'));
+        }
+        if ($request->has('peruntukan') && $request->input('peruntukan') != '') {
+            $Kos->where('peruntukan', $request->input('peruntukan'));
+        }
         return DataTables::of($Kos)
-            ->addColumn('action', function ($Kos) {
-                return view('admin.kos.components.actions', compact('Kos'));
+            ->addColumn('lihat', function ($Kos) {
+                return '<a href="' . url('/kos', $Kos->slug) . '" class="btn btn-primary btn-sm" target="__blank">Lihat Kos</a>';
             })
-            ->rawColumns(['action'])
+            ->addColumn('alamat', function ($Kos) {
+                return 'Jalan : ' . $Kos->jalan->jalan . '<br>Kelurahan : ' . $Kos->kelurahan->kelurahan;
+            })
+            ->rawColumns(['lihat', 'alamat'])
             ->make(true);
     }
     public function getFasilitasUmumDataTable($id_kos)

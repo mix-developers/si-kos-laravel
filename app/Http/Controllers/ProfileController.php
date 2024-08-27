@@ -27,15 +27,18 @@ class ProfileController extends Controller
         try {
             $request->validate([
                 'name' => 'required|string|max:255',
+                'no_hp' => 'string',
                 'email' => 'required|string|email|max:255|unique:users,email,' . Auth::user()->id,
                 'current_password' => 'nullable|required_with:new_password',
                 'new_password' => 'nullable|min:8|max:12|required_with:current_password',
-                'password_confirmation' => 'nullable|min:8|max:12|required_with:new_password|same:new_password'
+                'password_confirmation' => 'nullable|min:8|max:12|required_with:new_password|same:new_password',
+                'file_ktp' => 'nullable|file|mimes:jpeg,png,pdf',
             ]);
 
 
             $user = User::findOrFail(Auth::user()->id);
             $user->name = $request->input('name');
+            $user->no_hp = $request->input('no_hp');
             $user->email = $request->input('email');
 
             if (!is_null($request->input('current_password'))) {
@@ -44,6 +47,13 @@ class ProfileController extends Controller
                 } else {
                     return redirect()->back()->withInput();
                 }
+            }
+            if ($request->hasFile('file_ktp')) {
+                $file = $request->file('file_ktp');
+                $filename = time() . '_' . $file->getClientOriginalName();
+                $file->storeAs('ktp', $filename, 'public');
+
+                $user->file_ktp = 'ktp/' . $filename;
             }
 
             $user->save();

@@ -2,12 +2,15 @@
 
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\FasilitasKosController;
+use App\Http\Controllers\FavoriteController;
 use App\Http\Controllers\KosController;
+use App\Http\Controllers\LaporanController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SewaController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\LokasiController;
 use App\Http\Controllers\RatingController;
+use App\Models\Favorite;
 use App\Models\Kos;
 use App\Models\SewaKos;
 use Illuminate\Support\Facades\Auth;
@@ -31,14 +34,21 @@ Route::get('/', function () {
 });
 Route::get('/kos/{slug}', function ($slug) {
     $kos = Kos::where('slug', $slug)->first();
+    $isFavorited = false; // Default to false
+    if (Auth::check()) {
+        $isFavorited = Favorite::where('id_user', Auth::id())
+            ->where('id_kos', $kos->id)
+            ->exists();
+    }
     $title = 'Kos : ' . $kos->nama_kos;
-    return view('pages.detail', ['title' => $title, 'kos' => $kos]);
+    return view('pages.detail', ['title' => $title, 'kos' => $kos, 'isFavorited' => $isFavorited]);
 });
 Route::get('/semua-kos', function () {
     $title = 'Semua Kos';
     $kos = Kos::paginate(10);
     return view('pages.semua', ['title' => $title, 'kos' => $kos]);
 });
+
 Route::get('/cari-kos', function () {
     $title = 'Cari Kos';
     return view('pages.cari', ['title' => $title]);
@@ -63,7 +73,15 @@ Route::middleware(['auth:web', 'role:User', 'verified'])->group(function () {
         $title = 'Akun Saya';
         return view('pages.akun', ['title' => $title]);
     });
+    Route::get('/favorite', function () {
+        $title = 'Daftar Favorite';
+        $favorite = Favorite::with(['kos', 'user'])->where('id_user', Auth::id())->get();
+        return view('pages.favorite', ['title' => $title, 'favorite' => $favorite]);
+    });
+    Route::post('/toggle-favorite', [FavoriteController::class, 'toggleFavorit'])->name('toggle.favorite');
+    Route::delete('/delete-favorite/{id}', [FavoriteController::class, 'destroy'])->name('delete.favorite');
 });
+
 
 Route::middleware(['auth:web', 'role:User', 'verified'])->group(function () {
     Route::get('/kos-saya',  [SewaController::class, 'kos_user'])->name('kos-saya');
@@ -96,6 +114,11 @@ Route::middleware(['auth:web', 'role:Admin,Pemilik_kos', 'verified'])->group(fun
     //sewa management
     Route::get('/sewa/detail/{id}', [SewaController::class, 'detail'])->name('sewa.detail');
     Route::get('/sewa-datatable', [SewaController::class, 'getSewaDataTable']);
+    //laporan management
+    Route::get('/laporan/sewa', [LaporanController::class, 'sewa'])->name('laporan.sewa');
+    Route::get('/laporan/kos', [LaporanController::class, 'kos'])->name('laporan.kos');
+    //kos management
+    Route::get('/kos-datatable', [KosController::class, 'getKosDataTable']);
 });
 Route::middleware(['auth:web', 'role:Admin', 'verified'])->group(function () {
     //kos managemen

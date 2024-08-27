@@ -22,8 +22,12 @@
                     @else
                         <li class="text-white">|</li>
                         @if (Auth::user()->role == 'User')
-                            <li><a href="{{ url('/kos-saya') }}">Kos Saya</a></li>
-                            <li><a href="{{ url('/akun') }}">Akun</a></li>
+                            <li class="{{ request()->is('favorite') ? 'active' : '' }}"><a
+                                    href="{{ url('/favorite') }}">Favorite</a></li>
+                            <li class="{{ request()->is('kos-saya') ? 'active' : '' }}"><a
+                                    href="{{ url('/kos-saya') }}">Kos Saya</a></li>
+                            <li class="{{ request()->is('akun') ? 'active' : '' }}"><a href="{{ url('/akun') }}">Akun</a>
+                            </li>
                             <li><a href="{{ route('logout') }}" class="btn btn-danger btn-sm text-white"
                                     onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                                     Logout

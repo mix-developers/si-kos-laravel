@@ -15,10 +15,34 @@
                         data: 'nama_kos',
                         name: 'nama_kos'
                     },
+                    {
+                        data: 'nama_pemilik',
+                        name: 'nama_pemilik'
+                    },
+                    {
+                        data: 'jumlah_pintu',
+                        name: 'jumlah_pintu'
+                    },
+                    {
+                        data: 'harga_kos',
+                        name: 'harga_kos'
+                    },
+                    {
+                        data: 'peruntukan',
+                        name: 'peruntukan'
+                    },
+                    {
+                        data: 'alamat',
+                        name: 'alamat'
+                    },
+                    {
+                        data: 'status',
+                        name: 'status'
+                    },
 
                     {
-                        data: 'action',
-                        name: 'action'
+                        data: 'lihat',
+                        name: 'lihat',
                     }
                 ]
             });
