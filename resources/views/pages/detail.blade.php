@@ -132,7 +132,7 @@
                             style="font-size:16px;">Pintu/KOS </span><br>
                         <div class="d-flex align-items-center h6 text-black">
                             <strong>Status KOS : </strong> <span
-                                class="badge bg-{{ $kos->status == 'Open' ? 'success' : 'danger' }} mx-2">{{ $kos->status }}</span>
+                                class="badge bg-{{ App\Models\SewaKos::tersedia($kos->id) != 0 ? 'success' : 'danger' }} mx-2">{{ App\Models\SewaKos::tersedia($kos->id) != 0 ? 'Open' : 'Close' }}</span>
                         </div>
                         <div class="d-flex align-items-center h6 text-black">
                             <strong> Pintu/KOS Tersedia : </strong> <span
