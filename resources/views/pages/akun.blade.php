@@ -141,6 +141,37 @@
                                         </div>
                                     </div>
                                     <div class="row">
+                                        <div class="col-lg-12">
+                                            <div class="form-group  mb-3">
+                                                <label class="form-control-label" for="no_hp">Jenis Kelamin<span
+                                                        class="small text-danger">*</span></label>
+                                                <select id="jk"
+                                                    class="form-control @error('jk') is-invalid @enderror" name="jk">
+                                                    <option value="">Pilih Jenis Kelamin</option>
+                                                    <option value="L"
+                                                        {{ old('jk', Auth::user()->jk) == 'L' ? 'selected' : '' }}>
+                                                        Laki-laki</option>
+                                                    <option value="P"
+                                                        {{ old('jk', Auth::user()->jk) == 'P' ? 'selected' : '' }}>
+                                                        Perempuan</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-lg-12">
+                                            <div class="form-group  mb-3">
+                                                <label class="form-control-label" for="no_hp">Status Pekerjaan<span
+                                                        class="small text-danger">*</span></label>
+                                                <input type="text" id="status_pekerjaan"
+                                                    class="form-control  @error('status_pekerjaan') is-invalid @enderror"
+                                                    name="status_pekerjaan"
+                                                    value="{{ old('status_pekerjaan', Auth::user()->status_pekerjaan) }}"
+                                                    required>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
                                         <div class="col-lg-4">
                                             <div class="form-group focused  mb-3">
                                                 <label class="form-control-label" for="current_password">Current

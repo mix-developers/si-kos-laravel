@@ -56,21 +56,24 @@
                         <h6 class="heading-small text-muted mb-4">User information</h6>
 
                         <div class="pl-lg-4">
-                            <div class="row">
-                                <div class="col-8">
-                                    <div class="form-group focused mb-3">
-                                        <label class="form-control-label" for="name">Upload KTP<span
-                                                class="small text-danger">*</span></label>
-                                        <input type="file" id="file_ktp"
-                                            class="form-control  @error('file_ktp') is-invalid @enderror" name="file_ktp">
+                            @if (Auth::user()->role == 'Pemilik_kos')
+                                <div class="row">
+                                    <div class="col-8">
+                                        <div class="form-group focused mb-3">
+                                            <label class="form-control-label" for="name">Upload KTP<span
+                                                    class="small text-danger">*</span></label>
+                                            <input type="file" id="file_ktp"
+                                                class="form-control  @error('file_ktp') is-invalid @enderror"
+                                                name="file_ktp">
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="col-4">
-                                    <img src="{{ Storage::url(Auth::user()->file_ktp ?? '') }}" alt="ktp"
-                                        style="width: auto; height:200px;">
-                                </div>
+                                    <div class="col-4">
+                                        <img src="{{ Storage::url(Auth::user()->file_ktp ?? '') }}" alt="ktp"
+                                            style="width: auto; height:200px;">
+                                    </div>
 
-                            </div>
+                                </div>
+                            @endif
                             <div class="row">
                                 <div class="col-12">
                                     <div class="form-group focused mb-3">
@@ -96,17 +99,19 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="row">
-                                <div class="col-lg-12">
-                                    <div class="form-group  mb-3">
-                                        <label class="form-control-label" for="no_hp">Nomor HP/WA (aktif)<span
-                                                class="small text-danger">*</span></label>
-                                        <input type="text" id="no_hp"
-                                            class="form-control  @error('no_hp') is-invalid @enderror" name="no_hp"
-                                            value="{{ old('no_hp', Auth::user()->no_hp) }}">
+                            @if (Auth::user()->role == 'Pemilik_kos')
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                        <div class="form-group  mb-3">
+                                            <label class="form-control-label" for="no_hp">Nomor HP/WA (aktif)<span
+                                                    class="small text-danger">*</span></label>
+                                            <input type="text" id="no_hp"
+                                                class="form-control  @error('no_hp') is-invalid @enderror" name="no_hp"
+                                                value="{{ old('no_hp', Auth::user()->no_hp) }}">
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
+                            @endif
                             <div class="row">
                                 <div class="col-lg-4">
                                     <div class="form-group focused  mb-3">

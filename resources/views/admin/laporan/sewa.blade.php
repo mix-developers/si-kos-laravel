@@ -45,6 +45,8 @@
                         <thead>
                             <tr>
                                 <th>ID</th>
+                                <th>Nama Kos</th>
+                                <th>Alamat Kos</th>
                                 <th>Nama Penyewa</th>
                                 <th>Tanggal masuk</th>
                                 <th>jangka waktu</th>
@@ -56,6 +58,8 @@
                         <tfoot>
                             <tr>
                                 <th>ID</th>
+                                <th>Nama Kos</th>
+                                <th>Alamat Kos</th>
                                 <th>Nama Penyewa</th>
                                 <th>Tanggal masuk</th>
                                 <th>jangka waktu</th>
@@ -87,6 +91,14 @@
                         name: 'id'
                     },
 
+                    {
+                        data: 'kos.nama_kos',
+                        name: 'kos.nama_kos'
+                    },
+                    {
+                        data: 'alamat',
+                        name: 'alamat'
+                    },
                     {
                         data: 'nama_penyewa',
                         name: 'nama_penyewa'

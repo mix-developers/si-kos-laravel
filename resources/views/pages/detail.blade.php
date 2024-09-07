@@ -79,8 +79,8 @@
         </div>
     @endif
     <div class="section">
-        <div class="container">
-            <div class="row">
+        <div class="container text-center">
+            <div class="row ">
                 @if ($kos->foto_1 != null)
                     <div class="col-md-4" data-aos="fade-up" data-aos-delay="0">
                         <img src="{{ Storage::url($kos->foto_1) }}" alt="Image" class="img-fluid">
@@ -120,10 +120,12 @@
                             href="https://api.whatsapp.com/send?text={{ urlencode('Dengan harga Rp ' . number_format($kos->harga_kos) . ' kamu sudah bisa sewa di kos : ' . $kos->nama_kos . ', yuk cek di sini : ' . url('/kos', $kos->slug)) }}"
                             target="_blank">Bagikan KOS ini ke rekan anda di
                             WhatsApp</a>
-                        <a href="javascript:void(0);" class="btn favorit-btn" data-item-id="{{ $kos->id }}">
-                            <i class="fa fa-heart {{ $isFavorited ? 'text-danger' : 'text-muted' }}"
-                                style="font-size: 30px;"></i>
-                        </a>
+                        @if (Auth::check())
+                            <a href="javascript:void(0);" class="btn favorit-btn" data-item-id="{{ $kos->id }}">
+                                <i class="fa fa-heart {{ $isFavorited ? 'text-danger' : 'text-muted' }}"
+                                    style="font-size: 30px;"></i>
+                            </a>
+                        @endif
                     </div>
                     <hr>
                     <h3 class="fw-bold">KOS ini menyediakan</h3>

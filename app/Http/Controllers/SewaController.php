@@ -78,7 +78,7 @@ class SewaController extends Controller
     }
     public function getSewaDataTable(Request $request)
     {
-        $sewa = SewaKos::orderByDesc('id');
+        $sewa = SewaKos::with(['kos'])->orderByDesc('id');
         if (Auth::user()->role == 'Pemilik_kos') {
             $kos = Kos::where('id_user', Auth::user()->id)->first();
             $sewa = $sewa->where('id_kos', $kos->id);
@@ -110,7 +110,10 @@ class SewaController extends Controller
                     return $tolak;
                 }
             })
-            ->rawColumns(['action', 'status'])
+            ->addColumn('alamat', function ($sewa) {
+                return 'Jalan : ' . $sewa->kos->jalan->jalan . '<br>Kelurahan : ' . $sewa->kos->kelurahan->kelurahan;
+            })
+            ->rawColumns(['action', 'status', 'alamat'])
             ->make(true);
     }
     public function detail($id)
