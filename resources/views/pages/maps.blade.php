@@ -67,7 +67,7 @@
                 L.marker([{{ $k->latitude }}, {{ $k->longitude }}])
                     .addTo(map)
                     .bindPopup(
-                        '<b>{{ $k->nama_kos }}</b><br>Rp {{ number_format($k->harga_kos) }}<br>{{ $k->id_jalan != null ? $k->jalan->jalan : '' }}<hr><a href="{{ url('/kos', $k->slug) }}" class="btn btn-sm btn-primary py-1 px-2">Lihat Kos</a><a href="https://www.google.com/maps/dir/?api=1&destination={{ $k->latitude }},{{ $k->longitude }}" target="__blank" class="btn btn-sm btn-warning py-1 px-2 mx-1">Rute</a>'
+                        '<b>{{ $k->nama_kos }}</b><br>Rp {{ number_format($k->harga_kos) }}<br>{{ $k->id_jalan != null ? $k->jalan->jalan : '' }}<hr><a href="{{ url('/detail-kos', $k->slug) }}" class="btn btn-sm btn-primary py-1 px-2">Lihat Kos</a><a href="https://www.google.com/maps/dir/?api=1&destination={{ $k->latitude }},{{ $k->longitude }}" target="__blank" class="btn btn-sm btn-warning py-1 px-2 mx-1">Rute</a>'
                     );
             @endforeach
         });

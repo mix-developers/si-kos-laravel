@@ -56,7 +56,7 @@
                         <h6 class="heading-small text-muted mb-4">User information</h6>
 
                         <div class="pl-lg-4">
-                            @if (Auth::user()->role == 'Pemilik_kos')
+                            {{-- @if (Auth::user()->role == 'Pemilik_kos')
                                 <div class="row">
                                     <div class="col-8">
                                         <div class="form-group focused mb-3">
@@ -73,7 +73,7 @@
                                     </div>
 
                                 </div>
-                            @endif
+                            @endif --}}
                             <div class="row">
                                 <div class="col-12">
                                     <div class="form-group focused mb-3">

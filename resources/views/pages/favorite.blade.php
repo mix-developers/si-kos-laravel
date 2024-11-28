@@ -91,9 +91,9 @@
                                                 </button>
                                             </form>
                                             <a class="btn btn-warning btn-sm me-2"
-                                                href="{{ url('/kos', $item->kos->slug) }}">Lihat Kos</a>
+                                                href="{{ url('/detail-kos', $item->kos->slug) }}">Lihat Kos</a>
                                             <a class="btn btn-primary btn-sm"
-                                                href="https://api.whatsapp.com/send?text={{ urlencode('Dengan harga Rp ' . number_format($item->kos->harga_kos) . ' kamu sudah bisa sewa di kos : ' . $item->kos->nama_kos . ', yuk cek di sini : ' . url('/kos', $item->kos->slug)) }}"
+                                                href="https://api.whatsapp.com/send?text={{ urlencode('Dengan harga Rp ' . number_format($item->kos->harga_kos) . ' kamu sudah bisa sewa di kos : ' . $item->kos->nama_kos . ', yuk cek di sini : ' . url('/detail-kos', $item->kos->slug)) }}"
                                                 target="_blank">Bagikan KOS ini ke rekan anda di WhatsApp</a>
                                         </div>
                                     </div>
@@ -127,14 +127,17 @@
                         <div class="property-slider justify-content-center">
                             @foreach (App\Models\Kos::limit(4)->get() as $item)
                                 <div class="property-item">
-                                    <a href="{{ url('/kos', $item->slug) }}" class="img">
+                                    <a href="{{ url('/detail-kos', $item->slug) }}" class="img">
                                         <img src="{{ Storage::url($item->foto_1) }}" alt="Image"
                                             style="width: 100%; height:350px; object-fit:cover;" />
                                     </a>
                                     <div class="property-content">
                                         <div class="price mb-2">
                                             <span>Rp {{ number_format($item->harga_kos) }}</span>
-                                            <small style="color: rgb(65, 65, 65); font-size:14px;">/ Bulan</small>
+                                            <small style="color: rgb(65, 65, 65); font-size:14px;">/ Bulan
+                                                <span
+                                                    class="badge bg-{{ App\Models\SewaKos::tersedia($item->id) != 0 ? 'success' : 'danger' }} mx-2">{{ App\Models\SewaKos::tersedia($item->id) != 0 ? 'Open' : 'Close' }}</span>
+                                            </small>
                                         </div>
                                         <div>
                                             <div class="d-flex align-items-center">
@@ -172,8 +175,8 @@
                                                     </div>
                                                 @endforeach
                                             </div>
-                                            <a href="{{ url('/kos', $item->slug) }}" class="btn btn-primary py-2 px-3"
-                                                style="width: 100%;">Lihat Kos</a>
+                                            <a href="{{ url('/detail-kos', $item->slug) }}"
+                                                class="btn btn-primary py-2 px-3" style="width: 100%;">Lihat Kos</a>
                                         </div>
                                     </div>
                                 </div>

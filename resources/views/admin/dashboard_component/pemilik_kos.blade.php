@@ -245,10 +245,10 @@
                                     <div class="col-md-2 mb-3">
                                         <label for="">Ketersediaan</label>
                                         <div class="form-check form-switch mb-2">
-
-                                            <input class="form-check-input" name="ketersediaan" type="checkbox"
-                                                id="flexSwitchCheckChecked" checked value="Y">
-
+                                            <input class="form-check-input" name="ketersediaan[]" type="hidden"
+                                                value="N"> <!-- Default N jika tidak checked -->
+                                            <input class="form-check-input" name="ketersediaan[]" type="checkbox"
+                                                id="flexSwitchCheckChecked" value="Y">
                                             <label class="form-check-label text-primary"
                                                 for="flexSwitchCheckChecked">Tersedia</label>
                                         </div>

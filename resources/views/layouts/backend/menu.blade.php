@@ -1,3 +1,6 @@
+@php
+    $cek_kos = App\Models\Kos::where('id_user', Auth::id())->latest()->first();
+@endphp
 <aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme">
     <div class="app-brand demo">
         {{-- logo aplikasi --}}
@@ -124,36 +127,38 @@
                 </a>
             </li>
         @else
-            <li class="menu-header small text-uppercase">
-                <span class="menu-header-text">KOS</span>
-            </li>
-            <li class="menu-item {{ request()->is('my-kos') ? 'active' : '' }}">
-                <a href="{{ url('/my-kos') }}" class="menu-link">
-                    <i class="menu-icon tf-icons bx bx-home"></i>
-                    <div data-i18n="Analytics">KOS Saya</div>
-                </a>
-            </li>
-            <li class="menu-item {{ request()->is('sewa') ? 'active' : '' }}">
-                <a href="{{ url('/sewa') }}" class="menu-link">
-                    <i class="menu-icon tf-icons bx bx-street-view"></i>
-                    <div data-i18n="Analytics">Penyewaan</div>
-                </a>
-            </li>
-            <li class="menu-item {{ request()->is('rating') ? 'active' : '' }}">
-                <a href="{{ url('/rating') }}" class="menu-link">
-                    <i class="menu-icon tf-icons bx bx-star"></i>
-                    <div data-i18n="Analytics">Rating & Ulasan</div>
-                </a>
-            </li>
-            <li class="menu-header small text-uppercase">
-                <span class="menu-header-text">Laporan</span>
-            </li>
-            <li class="menu-item {{ request()->is('laporan/sewa') ? 'active' : '' }}">
-                <a href="{{ url('/laporan/sewa') }}" class="menu-link">
-                    <i class="menu-icon tf-icons bx bx-file"></i>
-                    <div data-i18n="Analytics">Laporan Sewa</div>
-                </a>
-            </li>
+            @if ($cek_kos)
+                <li class="menu-header small text-uppercase">
+                    <span class="menu-header-text">KOS</span>
+                </li>
+                <li class="menu-item {{ request()->is('my-kos') ? 'active' : '' }}">
+                    <a href="{{ url('/my-kos') }}" class="menu-link">
+                        <i class="menu-icon tf-icons bx bx-home"></i>
+                        <div data-i18n="Analytics">KOS Saya</div>
+                    </a>
+                </li>
+                <li class="menu-item {{ request()->is('sewa') ? 'active' : '' }}">
+                    <a href="{{ url('/sewa') }}" class="menu-link">
+                        <i class="menu-icon tf-icons bx bx-street-view"></i>
+                        <div data-i18n="Analytics">Penyewaan</div>
+                    </a>
+                </li>
+                <li class="menu-item {{ request()->is('rating') ? 'active' : '' }}">
+                    <a href="{{ url('/rating') }}" class="menu-link">
+                        <i class="menu-icon tf-icons bx bx-star"></i>
+                        <div data-i18n="Analytics">Rating & Ulasan</div>
+                    </a>
+                </li>
+                <li class="menu-header small text-uppercase">
+                    <span class="menu-header-text">Laporan</span>
+                </li>
+                <li class="menu-item {{ request()->is('laporan/sewa') ? 'active' : '' }}">
+                    <a href="{{ url('/laporan/sewa') }}" class="menu-link">
+                        <i class="menu-icon tf-icons bx bx-file"></i>
+                        <div data-i18n="Analytics">Laporan Sewa</div>
+                    </a>
+                </li>
+            @endif
         @endif
         <li class="menu-header small text-uppercase">
             <span class="menu-header-text">Akun</span>

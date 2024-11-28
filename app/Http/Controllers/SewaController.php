@@ -22,12 +22,35 @@ class SewaController extends Controller
     }
     public function kos_user()
     {
+        // Dapatkan semua sewa user
+        $sewa_user = SewaKos::with(['kos'])->where('id_user', Auth::id())->get();
+
+        // Pisahkan sewa aktif dan riwayat
+        $sewa_aktif = [];
+        $sewa_riwayat = [];
+        // dd($sewa_user);
+        foreach ($sewa_user as $sewa) {
+            if ($sewa->kos) {
+                $tanggalSewa = strtotime($sewa->tanggal_sewa);
+                $tanggalAkhir = date('Y-m-d', strtotime("+{$sewa->jangka_waktu} month", $tanggalSewa));
+
+                // Periksa apakah sewa masih aktif
+                if (strtotime($tanggalAkhir) >= strtotime(now())) {
+                    $sewa_aktif[] = $sewa;
+                } else {
+                    $sewa_riwayat[] = $sewa;
+                }
+            }
+        }
+
+        // Kirim data ke view
         $data = [
             'title' => 'Kos Saya',
             'kos' => Kos::latest()->limit(3)->get(),
-            'sewa_active' => SewaKos::with(['kos'])->where('id_user', Auth::id())->first(),
-            'sewa_no_active' => SewaKos::where('id_user', Auth::id())->get(),
+            'sewa_active' => $sewa_aktif,
+            'sewa_no_active' => $sewa_riwayat,
         ];
+
         return view('pages.sewa.kos_saya', $data);
     }
     public function ajukan(Request $request)
@@ -70,7 +93,7 @@ class SewaController extends Controller
             $ownerEmail = User::find($kos->id_user)->email;
             Mail::to($ownerEmail)->send(new SewaKosNotification($sewa, $kos));
 
-            return redirect()->to('kos/' . $kos->slug);
+            return redirect()->to('detail-kos/' . $kos->slug);
         } else {
             session()->flash('error', 'Gagal mengajukan sewa. Silakan coba lagi.');
             return redirect()->back();

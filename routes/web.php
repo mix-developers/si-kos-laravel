@@ -32,7 +32,7 @@ Route::get('/', function () {
     $kos = Kos::limit(5)->get();
     return view('pages.index', ['title' => $title, 'kos' => $kos]);
 });
-Route::get('/kos/{slug}', function ($slug) {
+Route::get('/detail-kos/{slug}', function ($slug) {
     $kos = Kos::where('slug', $slug)->first();
     $isFavorited = false; // Default to false
     if (Auth::check()) {

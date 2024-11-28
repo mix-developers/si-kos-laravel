@@ -49,14 +49,17 @@
                         <div class="property-slider justify-content-center">
                             @foreach ($kos as $item)
                                 <div class="property-item">
-                                    <a href="{{ url('/kos', $item->slug) }}" class="img">
+                                    <a href="{{ url('/detail-kos', $item->slug) }}" class="img">
                                         <img src="{{ Storage::url($item->foto_1) }}" alt="Image"
                                             style="width: 100%; height:350px; object-fit:cover;" />
                                     </a>
 
                                     <div class="property-content">
                                         <div class="price mb-2"><span>Rp {{ number_format($item->harga_kos) }}</span>
-                                            <samll style="color: rgb(65, 65, 65); font-size:14px;">/ Bulan</samll>
+                                            <samll style="color: rgb(65, 65, 65); font-size:14px;">/ Bulan
+                                                <span
+                                                    class="badge bg-{{ App\Models\SewaKos::tersedia($item->id) != 0 ? 'success' : 'danger' }} mx-2">{{ App\Models\SewaKos::tersedia($item->id) != 0 ? 'Open' : 'Close' }}</span>
+                                            </samll>
                                         </div>
                                         <div>
                                             <div class="d-flex align-items-center">
@@ -96,8 +99,8 @@
                                                 @endforeach
 
                                             </div>
-                                            <a href="{{ url('/kos', $item->slug) }}" class="btn btn-primary py-2 px-3 "
-                                                style="width: 100%">Lihat Kos</a>
+                                            <a href="{{ url('/detail-kos', $item->slug) }}"
+                                                class="btn btn-primary py-2 px-3 " style="width: 100%">Lihat Kos</a>
 
                                         </div>
                                     </div>

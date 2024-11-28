@@ -104,18 +104,18 @@ class KosController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'foto_1' => 'required|image|max:5248', // foto_1 harus berupa file gambar (jpeg, png, bmp, gif, atau svg) dengan ukuran maksimum 2MB
-            'foto_2' => 'required|image|max:5248', // foto_2 harus berupa file gambar (jpeg, png, bmp, gif, atau svg) dengan ukuran maksimum 2MB
-            'foto_3' => 'required|image|max:5248', // foto_3 harus berupa file gambar (jpeg, png, bmp, gif, atau svg) dengan ukuran maksimum 2MB
+            'foto_1' => 'required|max:5248', // foto_1 harus berupa file gambar (jpeg, png, bmp, gif, atau svg) dengan ukuran maksimum 2MB
+            'foto_2' => 'required|max:5248', // foto_2 harus berupa file gambar (jpeg, png, bmp, gif, atau svg) dengan ukuran maksimum 2MB
+            'foto_3' => 'required|max:5248', // foto_3 harus berupa file gambar (jpeg, png, bmp, gif, atau svg) dengan ukuran maksimum 2MB
             'nama_kos' => 'required|string|max:255',
             'id_jalan' => 'required',
             'nama_pemilik' => 'required|string|max:255',
             'jumlah_pintu' => 'required|integer', // jumlah_pintu harus berupa bilangan bulat
             'harga_kos' => 'required|numeric', // harga_kos harus berupa bilangan numerik
             'peruntukan' => 'required|string|max:255',
-            'ketentuan_kos' => 'required|string|max:255',
-            'keterangan_kos' => 'required|string|max:255',
-            'alamat_kos' => 'required|string|max:255',
+            'ketentuan_kos' => 'required|string',
+            'keterangan_kos' => 'required|string',
+            'alamat_kos' => 'required|string',
             'id_fasilitas.*' => 'required|exists:fasilitas_kos,id', // validasi untuk memastikan id_fasilitas ada di tabel fasilitas_kos
             'jumlah.*' => 'required|integer|min:0', // jumlah harus bilangan bulat tidak boleh negatif
             'milik.*' => 'required|in:Pribadi,Bersama', // kepemilikan harus Pribadi atau Bersama
@@ -216,16 +216,20 @@ class KosController extends Controller
                 $fasilitas_umum_kos->id_fasilitas = $id_fasilitas;
                 $fasilitas_umum_kos->jumlah = $request->input('jumlah')[$index];
                 $fasilitas_umum_kos->milik = $request->input('milik')[$index];
-                $fasilitas_umum_kos->ketersediaan = $request->has('ketersediaan.' . $index) ? 'Y' : 'N';
+                $fasilitas_umum_kos->ketersediaan = $request->input('ketersediaan')[$index] ?? 'N';
                 $fasilitas_umum_kos->save();
             }
-            foreach ($request->input('tambahan_nama_fasilitas') as $key => $nama_fasilitas) {
-                $fasilitas_tambahan = new FasilitasTambahanKos();
-                $fasilitas_tambahan->id_kos = $kos->id;
-                $fasilitas_tambahan->nama_fasilitas = $nama_fasilitas;
-                $fasilitas_tambahan->jumlah = $request->input('tambahan_jumlah_fasilitas')[$key];
-                $fasilitas_tambahan->milik = $request->input('tambahan_milik')[$key];
-                $fasilitas_tambahan->save();
+            if (!empty($request->input('tambahan_nama_fasilitas'))) {
+                foreach ($request->input('tambahan_nama_fasilitas') as $key => $nama_fasilitas) {
+                    if (!empty($nama_fasilitas)) {
+                        $fasilitas_tambahan = new FasilitasTambahanKos();
+                        $fasilitas_tambahan->id_kos = $kos->id;
+                        $fasilitas_tambahan->nama_fasilitas = $nama_fasilitas;
+                        $fasilitas_tambahan->jumlah = $request->input('tambahan_jumlah_fasilitas')[$key];
+                        $fasilitas_tambahan->milik = $request->input('tambahan_milik')[$key];
+                        $fasilitas_tambahan->save();
+                    }
+                }
             }
             session()->flash('success', 'Berhasil mendaftarkan kos');
             return back();

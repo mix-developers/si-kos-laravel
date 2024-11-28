@@ -30,15 +30,15 @@
                         </span>
                     @enderror
                 </div>
-                <div class="mb-3">
+                {{-- <div class="mb-3">
                     <label for="name" class="form-label" id="no-title">Upload Foto KTP</label>
-                    <input type="file" class="form-control" id="file_ktp" name="file_ktp" autofocus>
+                    <input type="file" class="form-control" id="file_ktp" name="file_ktp" autofocus required>
                     @error('file_ktp')
                         <span class="text-danger" role="alert">
                             <small>{{ $message }}</small>
                         </span>
                     @enderror
-                </div>
+                </div> --}}
                 <div class="mb-3">
                     <label for="name" class="form-label" id="no-title">Nama Lengkap</label>
                     <input type="text" class="form-control" id="name" name="name" placeholder="Nama Lengkap"
@@ -82,9 +82,9 @@
                         </span>
                     @enderror
                 </div>
-                <div class="mb-3">
+                <div class="mb-3" id="status_pekerjaan">
                     <label for="status_pekerjaan" class="form-label">Status Pekerjaan</label>
-                    <input type="text" class="form-control" id="status_pekerjaan" name="status_pekerjaan">
+                    <input type="text" class="form-control" id="" name="status_pekerjaan">
                     @error('status_pekerjaan')
                         <span class="text-danger" role="alert">
                             <small>{{ $message }}</small>

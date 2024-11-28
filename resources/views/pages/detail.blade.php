@@ -117,7 +117,7 @@
                     <div class="d-flex justify-content-between align-items-end">
                         <h4><span class="icon-home2"></span> Banyak pilihan kamar untukmu</h4>
                         <a class="btn btn-primary btn-sm"
-                            href="https://api.whatsapp.com/send?text={{ urlencode('Dengan harga Rp ' . number_format($kos->harga_kos) . ' kamu sudah bisa sewa di kos : ' . $kos->nama_kos . ', yuk cek di sini : ' . url('/kos', $kos->slug)) }}"
+                            href="https://api.whatsapp.com/send?text={{ urlencode('Dengan harga Rp ' . number_format($kos->harga_kos) . ' kamu sudah bisa sewa di kos : ' . $kos->nama_kos . ', yuk cek di sini : ' . url('/detail-kos', $kos->slug)) }}"
                             target="_blank">Bagikan KOS ini ke rekan anda di
                             WhatsApp</a>
                         @if (Auth::check())
@@ -131,13 +131,13 @@
                     <h3 class="fw-bold">KOS ini menyediakan</h3>
                     <div class="mb-3 border p-3">
                         <span class="h1">{{ $kos->jumlah_pintu }}</span> <span class="text-black"
-                            style="font-size:16px;">Pintu/KOS </span><br>
+                            style="font-size:16px;">Pintu/detail-KOS </span><br>
                         <div class="d-flex align-items-center h6 text-black">
                             <strong>Status KOS : </strong> <span
                                 class="badge bg-{{ App\Models\SewaKos::tersedia($kos->id) != 0 ? 'success' : 'danger' }} mx-2">{{ App\Models\SewaKos::tersedia($kos->id) != 0 ? 'Open' : 'Close' }}</span>
                         </div>
                         <div class="d-flex align-items-center h6 text-black">
-                            <strong> Pintu/KOS Tersedia : </strong> <span
+                            <strong> Pintu/detail-KOS Tersedia : </strong> <span
                                 class="badge bg-{{ App\Models\SewaKos::tersedia($kos->id) != 0 ? 'success' : 'danger' }} mx-2">{{ App\Models\SewaKos::tersedia($kos->id) }}</span>
                         </div>
                     </div>
@@ -188,73 +188,67 @@
                     @if (Auth::check())
                         @if (Auth::user()->role == 'User')
                             @php
-                                $cek_sewa = App\Models\SewaKos::where('id_user', Auth::user()->id)
+                                // Cek status sewa pengguna untuk kos ini
+                                $sewaKos = App\Models\SewaKos::where('id_user', Auth::id())
                                     ->where('id_kos', $kos->id)
-                                    ->count();
-                                if ($cek_sewa != 0) {
-                                    $tanggal_sewa = App\Models\SewaKos::where('id_user', Auth::user()->id)
-                                        ->where('id_kos', $kos->id)
-                                        ->latest()
-                                        ->first()->tanggal_sewa;
+                                    ->latest()
+                                    ->first();
 
-                                    $tanggal_sewa_timestamp = strtotime($tanggal_sewa);
+                                $isSewaAktif = false;
+                                $tanggalAkhir = null;
 
-                                    $tanggal_akhir_timestamp = strtotime('+1 month', $tanggal_sewa_timestamp);
+                                if ($sewaKos) {
+                                    $tanggalSewa = strtotime($sewaKos->tanggal_sewa);
+                                    $tanggalAkhir = date('Y-m-d', strtotime('+1 month', $tanggalSewa));
 
-                                    $tanggal_akhir = date('Y-m-d', $tanggal_akhir_timestamp);
-
-                                    $check_kos_aktif = App\Models\SewaKos::where('id_user', Auth::user()->id)
-                                        ->where('tanggal_sewa', '<=', $tanggal_akhir)
-                                        ->where('id_kos', $kos->id)
-                                        ->count();
+                                    // Jika sekarang masih dalam periode aktif
+                                    $isSewaAktif = strtotime(now()) <= strtotime($tanggalAkhir);
                                 }
-                                $check_rating = App\Models\Rating::where('id_kos', $kos->id)
+
+                                // Cek apakah pengguna sudah memberikan rating
+                                $ulasan = App\Models\Rating::where('id_kos', $kos->id)
                                     ->where('id_user', Auth::id())
-                                    ->count();
-                                if ($check_rating != 0) {
-                                    $ulasan = App\Models\Rating::where('id_kos', $kos->id)
-                                        ->where('id_user', Auth::id())
-                                        ->first();
-                                }
+                                    ->first();
                             @endphp
-                            @if ($cek_sewa != 0)
-                                @if ($check_kos_aktif == 0)
-                                    <form action="{{ route('sewa.ajukan') }}" method="GET">
-                                        <div class="p-3 shadow-lg">
-                                            <div class="d-flex align-items-center mb-3">
-                                                <h2 class="mx-2 fw-bold">Rp {{ number_format($kos->harga_kos) }}</h2>
-                                                (per-bulan)
-                                            </div>
-                                            <input type="hidden" name="id_kos" value="{{ $kos->id }}">
-                                            <div class="mb-3">
-                                                <label>Tanggal masuk</label>
-                                                <input type="date" class="form-control form-lg" name="tanggal"
-                                                    required>
-                                            </div>
-                                            <div class="mb-3">
-                                                <a href="https://wa.me/{{ $kos->user->no_hp }}" class="btn  btn-warning"
-                                                    style="display: block;"><i class="icon-phone"></i>
-                                                    Tanya
-                                                    Pemilik KOS</a>
-                                            </div>
-                                            <div class="mb-3">
-                                                <button type="submit" class="btn btn-primary btn-block"
-                                                    style="display: block; width:100%;">Ajukan
-                                                    Sewa</button>
-                                            </div>
+
+                            {{-- Jika pengguna belum pernah menyewa kos ini --}}
+                            @if (!$sewaKos)
+                                <form action="{{ route('sewa.ajukan') }}" method="GET">
+                                    <div class="p-3 shadow-lg">
+                                        <div class="d-flex align-items-center mb-3">
+                                            <h2 class="mx-2 fw-bold">Rp {{ number_format($kos->harga_kos) }}</h2>
+                                            (per-bulan)
                                         </div>
-                                    </form>
-                                @else
-                                    <div class="p-3 shadow-lg text-center">
-                                        <h5>Anda telah menyewa KOS ini hingga <br><b>{{ $tanggal_akhir }}</b></h5>
+                                        <input type="hidden" name="id_kos" value="{{ $kos->id }}">
+                                        <div class="mb-3">
+                                            <label>Tanggal masuk</label>
+                                            <input type="date" class="form-control form-lg" name="tanggal" required>
+                                        </div>
+                                        <div class="mb-3">
+                                            <a href="https://wa.me/{{ $kos->user->no_hp }}" class="btn btn-warning"
+                                                style="display: block;">
+                                                <i class="icon-phone"></i> Tanya Pemilik KOS
+                                            </a>
+                                        </div>
+                                        <div class="mb-3">
+                                            <button type="submit" class="btn btn-primary btn-block"
+                                                style="width: 100%;">Ajukan Sewa</button>
+                                        </div>
                                     </div>
-                                    {{-- rating dan ulasan pengguna --}}
-                                    @if ($check_rating == 0)
+                                </form>
+                            @else
+                                {{-- Jika sewa masih aktif --}}
+                                @if ($isSewaAktif)
+                                    <div class="p-3 shadow-lg text-center">
+                                        <h5>Anda telah menyewa KOS ini hingga <br><b>{{ $tanggalAkhir }}</b></h5>
+                                    </div>
+
+                                    {{-- Jika pengguna belum memberikan rating --}}
+                                    @if (!$ulasan)
                                         <div class="mt-4">
                                             <div class="p-3 border bg-white shadow">
                                                 <h6 class="text-primary mb-3">Bantu pemilik KOS untuk meningkatkan
-                                                    pelayanan
-                                                    KOS dengan menulis ulasan dan rating dari kamu</h6>
+                                                    pelayanan dengan menulis ulasan dan rating</h6>
                                                 <form action="{{ route('rating.store') }}" method="POST"
                                                     enctype="multipart/form-data">
                                                     @csrf
@@ -277,49 +271,55 @@
                                             </div>
                                         </div>
                                     @else
+                                        {{-- Jika pengguna sudah memberikan rating --}}
                                         <div class="mt-4">
                                             <div class="p-3 border bg-white shadow">
-                                                <h6 class="text-primary mb-3">Terimakasih anda telah membantu pemilik KOS
-                                                    ini
-                                                    dengan memberikan rating dan ulasan kamu..</h6>
+                                                <h6 class="text-primary mb-3">Terima kasih telah memberikan rating dan
+                                                    ulasan!</h6>
                                                 <div class="border p-2">
                                                     @for ($i = 1; $i <= $ulasan->rating; $i++)
                                                         <i class="icon-star text-success"></i>
                                                     @endfor
                                                     <b class="mx-2 text-success">({{ $ulasan->rating }} Rating)</b>
                                                     <br>
-                                                    <p>Ulasan : {{ $ulasan->ulasan }}</p>
+                                                    <p>Ulasan: {{ $ulasan->ulasan }}</p>
                                                 </div>
                                             </div>
                                         </div>
                                     @endif
                                     <div class="my-3">
-                                        <a href="https://wa.me/{{ $kos->user->no_hp }}" class="btn  btn-warning"
-                                            style="display: block;"><i class="icon-phone"></i>
-                                            Tanya
-                                            Pemilik KOS</a>
+                                        <a href="https://wa.me/{{ $kos->user->no_hp }}" class="btn btn-warning"
+                                            style="display: block;">
+                                            <i class="icon-phone"></i> Tanya Pemilik KOS
+                                        </a>
                                     </div>
+                                @else
+                                    {{-- Jika sewa telah berakhir --}}
+                                    <form action="{{ route('sewa.ajukan') }}" method="GET">
+                                        <div class="p-3 shadow-lg">
+                                            <div class="d-flex align-items-center mb-3">
+                                                <h2 class="mx-2 fw-bold">Rp {{ number_format($kos->harga_kos) }}</h2>
+                                                (per-bulan)
+                                            </div>
+                                            <input type="hidden" name="id_kos" value="{{ $kos->id }}">
+                                            <div class="mb-3">
+                                                <label>Tanggal masuk</label>
+                                                <input type="date" class="form-control form-lg" name="tanggal"
+                                                    required>
+                                            </div>
+                                            <div class="mb-3">
+                                                <a href="https://wa.me/{{ $kos->user->no_hp }}" class="btn btn-warning"
+                                                    style="display: block;">
+                                                    <i class="icon-phone"></i> Tanya Pemilik KOS
+                                                </a>
+                                            </div>
+                                            <div class="mb-3">
+                                                <button type="submit" class="btn btn-primary btn-block"
+                                                    style="width: 100%;">Ajukan Sewa</button>
+                                            </div>
+                                        </div>
+                                    </form>
                                 @endif
-                            @else
-                                <form action="{{ route('sewa.ajukan') }}" method="GET">
-                                    <div class="p-3 shadow-lg">
-                                        <div class="d-flex align-items-center mb-3">
-                                            <h2 class="mx-2 fw-bold">Rp {{ number_format($kos->harga_kos) }}</h2>
-                                            (per-bulan)
-                                        </div>
-                                        <input type="hidden" name="id_kos" value="{{ $kos->id }}">
-                                        <div class="mb-3">
-                                            <label>Tanggal masuk</label>
-                                            <input type="date" class="form-control form-lg" name="tanggal" required>
-                                        </div>
-                                        <div class="mb-3">
-                                            <a href="https://wa.me/{{ $kos->user->no_hp }}" class="btn  btn-warning"
-                                                style="display: block;"><i class="icon-phone"></i>
-                                                Tanya
-                                                Pemilik KOS</a>
-                                        </div>
-                                    </div>
-                                </form>
                             @endif
                         @else
                             <form action="{{ route('sewa.ajukan') }}" method="GET">

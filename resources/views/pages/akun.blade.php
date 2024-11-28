@@ -67,18 +67,12 @@
                 </div>
             </div>
             <div class="row">
-
-
                 <div class="col-12  order-lg-1">
-
                     <div class="card shadow mb-4">
-
                         <div class="card-header py-3">
                             <h6 class="m-0 font-weight-bold text-primary">My Account</h6>
                         </div>
-
                         <div class="card-body">
-
                             <form method="POST" action="{{ route('profile.update') }}" autocomplete="off"
                                 enctype="multipart/form-data">
                                 <input type="hidden" name="_token" value="{{ csrf_token() }}">
@@ -88,7 +82,7 @@
                                 <h6 class="heading-small text-muted mb-4">User information</h6>
 
                                 <div class="pl-lg-4">
-                                    <div class="row">
+                                    {{-- <div class="row">
                                         <div class="col-8">
                                             <div class="form-group focused mb-3">
                                                 <label class="form-control-label" for="name">Upload KTP<span
@@ -103,7 +97,7 @@
                                                 style="width: auto; height:200px;">
                                         </div>
 
-                                    </div>
+                                    </div> --}}
                                     <div class="row">
                                         <div class="col-12">
                                             <div class="form-group focused mb-3">
