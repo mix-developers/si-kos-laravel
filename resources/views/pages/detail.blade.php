@@ -325,12 +325,14 @@
                                             </div>
                                         </div>
                                     @endif
-                                    <div class="my-3">
-                                        <a href="https://wa.me/{{ $kos->user->no_hp }}" class="btn btn-warning"
-                                            style="display: block;">
-                                            <i class="icon-phone"></i> Tanya Pemilik KOS
-                                        </a>
-                                    </div>
+                                    @if ($sewaKos->is_verified != 2)
+                                        <div class="my-3">
+                                            <a href="https://wa.me/{{ $kos->user->no_hp }}" class="btn btn-warning"
+                                                style="display: block;">
+                                                <i class="icon-phone"></i> Tanya Pemilik KOS
+                                            </a>
+                                        </div>
+                                    @endif
                                 @else
                                     {{-- Jika sewa telah berakhir --}}
                                     <form action="{{ route('sewa.ajukan') }}" method="GET">
