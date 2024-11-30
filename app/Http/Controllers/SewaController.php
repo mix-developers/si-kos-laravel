@@ -114,7 +114,8 @@ class SewaController extends Controller
             ->addColumn('action', function ($sewa) {
                 $tanggalAkhir = Carbon::parse($sewa->tanggal_sewa)->addMonths($sewa->jangka_waktu);
                 if (Carbon::now() > $tanggalAkhir && $sewa->is_verified == 0) {
-
+                    return 'Expired';
+                } else {
                     $accept = '<button type="button" onclick="acceptAction(' . $sewa->id . ')" class="btn btn-sm btn-success mx-1">Terima</button>';
                     $reject = '<button type="button"  onclick="rejectAction(' . $sewa->id . ')"  class="btn btn-sm btn-danger mx-1">Tolak</button>';
                     $detail = '<button type="button" onclick="detailAction(' . $sewa->id . ')" class="btn btn-sm btn-primary mx-1">Detail</button>';
@@ -124,8 +125,6 @@ class SewaController extends Controller
                         $button = $detail;
                     }
                     return $button;
-                } else {
-                    return 'Expired';
                 }
             })
             ->addColumn('status', function ($sewa) {
