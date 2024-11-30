@@ -2,6 +2,7 @@
 
 namespace App\Mail;
 
+use App\Models\EmailNotifikasi;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
@@ -29,6 +30,12 @@ class ExpiredNotification extends Mailable
 
     public function build()
     {
+        $notification = EmailNotifikasi::where('jenis', 'remaining')->first();
+
+        // If no matching notification is found, return early and don't send the email
+        if (!$notification) {
+            return;
+        }
         return $this->view('emails.expired-notification')
             ->with([
                 'sewa' => $this->sewa,
