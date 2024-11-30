@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\SewaKosNotification;
 use App\Models\User;
+use Carbon\Carbon;
 
 class SewaController extends Controller
 {
@@ -111,15 +112,21 @@ class SewaController extends Controller
         }
         return datatables()::of($sewa)
             ->addColumn('action', function ($sewa) {
-                $accept = '<button type="button" onclick="acceptAction(' . $sewa->id . ')" class="btn btn-sm btn-success mx-1">Terima</button>';
-                $reject = '<button type="button"  onclick="rejectAction(' . $sewa->id . ')"  class="btn btn-sm btn-danger mx-1">Tolak</button>';
-                $detail = '<button type="button" onclick="detailAction(' . $sewa->id . ')" class="btn btn-sm btn-primary mx-1">Detail</button>';
-                if (Auth::user()->role == 'Pemilik_kos') {
-                    $button = $sewa->is_verified == 0 ? $detail . $accept . $reject : $detail;
+                $tanggalAkhir = Carbon::parse($sewa->tanggal_sewa)->addMonths($sewa->jangka_waktu);
+                if ($sewa->tanggal_sewa < $tanggal) {
+
+                    $accept = '<button type="button" onclick="acceptAction(' . $sewa->id . ')" class="btn btn-sm btn-success mx-1">Terima</button>';
+                    $reject = '<button type="button"  onclick="rejectAction(' . $sewa->id . ')"  class="btn btn-sm btn-danger mx-1">Tolak</button>';
+                    $detail = '<button type="button" onclick="detailAction(' . $sewa->id . ')" class="btn btn-sm btn-primary mx-1">Detail</button>';
+                    if (Auth::user()->role == 'Pemilik_kos') {
+                        $button = $sewa->is_verified == 0 ? $detail . $accept . $reject : $detail;
+                    } else {
+                        $button = $detail;
+                    }
+                    return $button;
                 } else {
-                    $button = $detail;
+                    return 'Expired';
                 }
-                return $button;
             })
             ->addColumn('status', function ($sewa) {
                 $diterima = '<span class="badge bg-success">diterima</span>';
