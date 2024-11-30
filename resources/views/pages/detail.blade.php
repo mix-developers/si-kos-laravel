@@ -246,7 +246,7 @@
                                                 anda</b>
                                             </h5>
                                         </div>
-                                    @else
+                                    @elseif($sewaKos->is_verified != 2 && $sewaKos->is_verified == 1)
                                         <div class="p-3 shadow-lg text-center">
                                             <h5>Anda telah menyewa KOS ini hingga <br><b>{{ $tanggalAkhir }}</b></h5>
                                         </div>

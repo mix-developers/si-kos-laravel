@@ -112,8 +112,55 @@
                                 </div>
                             </div>
                         </div>
-                    @else
+                    @elseif($active->is_verified == 2)
                         <h3 class="mt-4 text-success">Menunggu Persetujuan</h3>
+                        <div class="mt-4">
+                            <div class="p-3 border" style="border-radius: 20px;">
+                                <div class="row align-items-center">
+                                    <!-- Gambar Kos -->
+                                    <div class="col-md-4">
+                                        <img src="{{ Storage::url($active['kos']['foto_1']) }}" alt="Image"
+                                            style="width: 100%; height:200px; object-fit:cover; border-radius:10px;" />
+                                    </div>
+                                    <!-- Informasi Kos -->
+                                    <div class="col-md-8">
+                                        <h1 class="mb-3">{{ $active['kos']['nama_kos'] }}</h1>
+                                        <div class="d-flex align-items-center mb-4">
+                                            <strong class="p-2 border rounded text-success"
+                                                style="font-size: 14px;">{{ $active['kos']['peruntukan'] }}</strong>
+                                            <i class="icon-star mx-2 text-success"></i>
+                                            <b>{{ App\Models\Rating::getRatingKos($active['kos']['id'] ?? 0) }}</b>
+                                            <span class="mx-2"> | Pemilik : {{ $active['kos']['nama_pemilik'] }}</span>
+                                            <span class="mx-2"> | Alamat : {{ $active['kos']['alamat_kos'] }}</span>
+                                        </div>
+                                        <!-- Tanggal Sewa -->
+                                        <div class="d-flex align-items-center mb-4">
+                                            Jangka Sewa :&nbsp; <strong class="text-success" style="font-size: 14px;">
+                                                {{ $active['tanggal_sewa'] }}
+                                            </strong> &nbsp;sampai&nbsp;
+                                            <strong class="text-danger" style="font-size: 14px;">
+                                                {{ date('Y-m-d', strtotime($active['tanggal_sewa'] . ' +' . $active['jangka_waktu'] . ' months')) }}
+                                            </strong>
+                                        </div>
+                                        <!-- Harga dan Aksi -->
+                                        <div class="d-flex justify-content-between align-items-end">
+                                            <h4 class="fw-bold"><span class="icon-money"></span> Rp
+                                                {{ number_format($active['kos']['harga_kos'] * $active['jangka_waktu']) }}
+                                            </h4>
+                                            <div class="p-2">
+                                                <a class="btn btn-warning btn-sm"
+                                                    href="{{ url('/detail-kos', $active['kos']['slug']) }}">Lihat Kos</a>
+                                                <a class="btn btn-primary btn-sm"
+                                                    href="https://api.whatsapp.com/send?text={{ urlencode('Dengan harga Rp ' . number_format($active['kos']['harga_kos']) . ' kamu sudah bisa sewa di kos : ' . $active['kos']['nama_kos'] . ', yuk cek di sini : ' . url('/detail-kos', $active['kos']['slug'])) }}"
+                                                    target="_blank">Bagikan KOS ini ke rekan anda di WhatsApp</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    @else
+                        <h3 class="mt-4 text-success">Penyewaan ditolak</h3>
                         <div class="mt-4">
                             <div class="p-3 border" style="border-radius: 20px;">
                                 <div class="row align-items-center">
