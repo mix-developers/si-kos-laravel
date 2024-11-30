@@ -4,22 +4,32 @@
     use Illuminate\Support\Facades\Mail;
     use Carbon\Carbon;
 
+    $errors = []; // Untuk menampung pesan error
+    $success = []; // Untuk menampung pesan sukses
+
     $sewaKosList = SewaKos::all();
 
     foreach ($sewaKosList as $sewaKos) {
-        // Hitung tanggal akhir sewa
-        $tanggalAkhir = Carbon::parse($sewaKos->tanggal_sewa)->addMonths($sewaKos->jangka_waktu);
+        try {
+            // Hitung tanggal akhir sewa
+            $tanggalAkhir = Carbon::parse($sewaKos->tanggal_sewa)->addMonths($sewaKos->jangka_waktu);
 
-        // Hitung selisih hari
-        $selisihHari = Carbon::now()->diffInDays($tanggalAkhir, false);
+            // Hitung selisih hari
+            $selisihHari = Carbon::now()->diffInDays($tanggalAkhir, false);
 
-        // Jika kurang dari 7 hari dan belum lewat
-        if ($selisihHari > 0 && $selisihHari <= 7) {
-            $kos = $sewaKos->kos; // Relasi ke model Kos
-            Mail::to($sewaKos->user->email)->send(new ExpiredNotification($sewaKos, $kos));
+            // Jika kurang dari 7 hari dan belum lewat
+            if ($selisihHari > 0 && $selisihHari <= 7) {
+                $kos = $sewaKos->kos; // Relasi ke model Kos
+                Mail::to($sewaKos->user->email)->send(new ExpiredNotification($sewaKos, $kos));
+                $success[] = "Email berhasil dikirim ke {$sewaKos->user->email}";
+            }
+        } catch (\Exception $e) {
+            $errors[] = "Gagal mengirim email ke {$sewaKos->user->email}: {$e->getMessage()}";
         }
     }
 @endphp
+
+
 
 
 <!DOCTYPE html>
@@ -55,6 +65,17 @@
 </head>
 
 <body data-aos-easing="slide" data-aos-duration="800" data-aos-delay="0">
+    <script>
+        @if (!empty($errors))
+            // Menampilkan pesan error
+            alert("Error:\n{!! implode('\n', $errors) !!}");
+        @endif
+
+        @if (!empty($success))
+            // Menampilkan pesan sukses
+            alert("Sukses:\n{!! implode('\n', $success) !!}");
+        @endif
+    </script>
     <div class="site-mobile-menu site-navbar-target">
         <div class="site-mobile-menu-header">
             <div class="site-mobile-menu-close">
