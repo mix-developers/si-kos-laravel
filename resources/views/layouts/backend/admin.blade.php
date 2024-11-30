@@ -98,12 +98,12 @@
     <script>
         @if (!empty($errors))
             // Menampilkan pesan error
-            alert("Error:\n{!! implode('\n', $errors) !!}");
+            console.log("Error:\n{!! implode('\n', $errors) !!}");
         @endif
 
         @if (!empty($success))
             // Menampilkan pesan sukses
-            alert("Sukses:\n{!! implode('\n', $success) !!}");
+            console.log("Sukses:\n{!! implode('\n', $success) !!}");
         @endif
     </script>
     <!-- Layout wrapper -->
