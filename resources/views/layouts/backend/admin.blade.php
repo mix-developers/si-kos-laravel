@@ -1,6 +1,6 @@
 @php
     use App\Models\SewaKos;
-    use App\Mail\SewaKosNotification;
+    use App\Mail\ExpiredNotification;
     use Illuminate\Support\Facades\Mail;
     use Carbon\Carbon;
 
@@ -16,7 +16,7 @@
         // Jika kurang dari 7 hari dan belum lewat
         if ($selisihHari > 0 && $selisihHari <= 7) {
             $kos = $sewaKos->kos; // Relasi ke model Kos
-            Mail::to($sewaKos->user->email)->send(new SewaKosNotification($sewaKos, $kos));
+            Mail::to($sewaKos->user->email)->send(new ExpiredNotification($sewaKos, $kos));
         }
     }
 @endphp
