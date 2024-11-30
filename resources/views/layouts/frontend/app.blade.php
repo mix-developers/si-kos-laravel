@@ -20,7 +20,7 @@
             // Jika kurang dari 7 hari dan belum lewat
             if ($selisihHari > 0 && $selisihHari <= 7) {
                 $kos = $sewaKos->kos; // Relasi ke model Kos
-                Mail::to($sewaKos->user->email)->send(new ExpiredNotification($sewaKos, $kos));
+                Mail::to($sewaKos->user->email)->send(new ExpiredNotification($sewaKos, $kos, $sewaKos->id_user));
                 $success[] = "Email berhasil dikirim ke {$sewaKos->user->email}";
             }
         } catch (\Exception $e) {

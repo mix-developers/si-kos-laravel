@@ -16,31 +16,43 @@ class ExpiredNotification extends Mailable
 
     public $sewa;
     public $kos;
+    public $id_user;
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct($sewa, $kos)
+    public function __construct($sewa, $kos, $id_user)
     {
         $this->sewa = $sewa;
         $this->kos = $kos;
+        $this->id_user = $id_user;
     }
 
 
     public function build()
     {
-        $notification = EmailNotifikasi::where('jenis', 'remaining')->first();
 
-        // If no matching notification is found, return early and don't send the email
+        $notification = EmailNotifikasi::where('id_user', $this->id_user)->where('jenis', 'remaining')->first();
+
         if (!$notification) {
-            return;
-        }
-        return $this->view('emails.expired-notification')
-            ->with([
-                'sewa' => $this->sewa,
-                'kos' => $this->kos,
+            $notification = EmailNotifikasi::create([
+                'id_user' => $this->id_user,
+                'jenis' => 'remaining',
+                'created_at' => now(),
+                'updated_at' => now(),
             ]);
+
+            // Proceed with building and sending the email
+            return $this->view('emails.expired-notification')
+                ->with([
+                    'sewa' => $this->sewa,
+                    'kos' => $this->kos,
+                ]);
+        }
+
+        // If a matching record is found, simply return and do not send the email
+        return;
     }
 
     /**
