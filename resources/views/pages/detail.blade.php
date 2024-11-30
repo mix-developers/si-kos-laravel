@@ -234,42 +234,54 @@
                                             <button type="submit" class="btn btn-primary btn-block"
                                                 style="width: 100%;">Ajukan Sewa</button>
                                         </div>
+
                                     </div>
                                 </form>
                             @else
                                 {{-- Jika sewa masih aktif --}}
                                 @if ($isSewaAktif)
-                                    <div class="p-3 shadow-lg text-center">
-                                        <h5>Anda telah menyewa KOS ini hingga <br><b>{{ $tanggalAkhir }}</b></h5>
-                                    </div>
-
+                                    @if ($sewaKos->is_verified == 0)
+                                        <div class="p-3 shadow-lg text-center text-warning">
+                                            <h5 class="text-danger">Silahkan menunggu pemilik kos menerima pengajuan
+                                                anda</b>
+                                            </h5>
+                                        </div>
+                                    @else
+                                        <div class="p-3 shadow-lg text-center">
+                                            <h5>Anda telah menyewa KOS ini hingga <br><b>{{ $tanggalAkhir }}</b></h5>
+                                        </div>
+                                    @endif
                                     {{-- Jika pengguna belum memberikan rating --}}
                                     @if (!$ulasan)
-                                        <div class="mt-4">
-                                            <div class="p-3 border bg-white shadow">
-                                                <h6 class="text-primary mb-3">Bantu pemilik KOS untuk meningkatkan
-                                                    pelayanan dengan menulis ulasan dan rating</h6>
-                                                <form action="{{ route('rating.store') }}" method="POST"
-                                                    enctype="multipart/form-data">
-                                                    @csrf
-                                                    <input type="hidden" name="id_kos" value="{{ $kos->id }}">
-                                                    <div class="mb-3">
-                                                        <label>Rating</label>
-                                                        <input type="number" name="rating" class="form-control"
-                                                            max="5" min="1" required>
-                                                        <small>Berikan rating kamu dari 1 sampai 5 berdasarkan pengalaman
-                                                            kamu</small>
-                                                    </div>
-                                                    <div class="mb-3">
-                                                        <label>Ulasan Anda</label>
-                                                        <textarea class="form-control" name="ulasan" required></textarea>
-                                                    </div>
-                                                    <div class="mb-3">
-                                                        <button type="submit" class="btn btn-primary">Submit</button>
-                                                    </div>
-                                                </form>
+                                        @if ($sewaKos->is_verified == 1)
+                                            <div class="mt-4">
+                                                <div class="p-3 border bg-white shadow">
+                                                    <h6 class="text-primary mb-3">Bantu pemilik KOS untuk meningkatkan
+                                                        pelayanan dengan menulis ulasan dan rating</h6>
+                                                    <form action="{{ route('rating.store') }}" method="POST"
+                                                        enctype="multipart/form-data">
+                                                        @csrf
+                                                        <input type="hidden" name="id_kos"
+                                                            value="{{ $kos->id }}">
+                                                        <div class="mb-3">
+                                                            <label>Rating</label>
+                                                            <input type="number" name="rating" class="form-control"
+                                                                max="5" min="1" required>
+                                                            <small>Berikan rating kamu dari 1 sampai 5 berdasarkan
+                                                                pengalaman
+                                                                kamu</small>
+                                                        </div>
+                                                        <div class="mb-3">
+                                                            <label>Ulasan Anda</label>
+                                                            <textarea class="form-control" name="ulasan" required></textarea>
+                                                        </div>
+                                                        <div class="mb-3">
+                                                            <button type="submit" class="btn btn-primary">Submit</button>
+                                                        </div>
+                                                    </form>
+                                                </div>
                                             </div>
-                                        </div>
+                                        @endif
                                     @else
                                         {{-- Jika pengguna sudah memberikan rating --}}
                                         <div class="mt-4">

@@ -1,3 +1,27 @@
+@php
+    use App\Models\SewaKos;
+    use App\Mail\SewaKosNotification;
+    use Illuminate\Support\Facades\Mail;
+    use Carbon\Carbon;
+
+    $sewaKosList = SewaKos::all();
+
+    foreach ($sewaKosList as $sewaKos) {
+        // Hitung tanggal akhir sewa
+        $tanggalAkhir = Carbon::parse($sewaKos->tanggal_sewa)->addMonths($sewaKos->jangka_waktu);
+
+        // Hitung selisih hari
+        $selisihHari = Carbon::now()->diffInDays($tanggalAkhir, false);
+
+        // Jika kurang dari 7 hari dan belum lewat
+        if ($selisihHari > 0 && $selisihHari <= 7) {
+            $kos = $sewaKos->kos; // Relasi ke model Kos
+            Mail::to($sewaKos->user->email)->send(new SewaKosNotification($sewaKos, $kos));
+        }
+    }
+@endphp
+
+
 <!DOCTYPE html>
 <html lang="en">
 

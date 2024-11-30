@@ -42,7 +42,7 @@ class SewaController extends Controller
                 }
             }
         }
-
+        // dd($sewa_aktif);
         // Kirim data ke view
         $data = [
             'title' => 'Kos Saya',
