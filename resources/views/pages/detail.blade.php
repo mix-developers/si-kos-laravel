@@ -234,7 +234,6 @@
                                             <button type="submit" class="btn btn-primary btn-block"
                                                 style="width: 100%;">Ajukan Sewa</button>
                                         </div>
-
                                     </div>
                                 </form>
                             @else
@@ -242,11 +241,10 @@
                                 @if ($isSewaAktif)
                                     @if ($sewaKos->is_verified == 0)
                                         <div class="p-3 shadow-lg text-center text-warning">
-                                            <h5 class="text-danger">Silahkan menunggu pemilik kos menerima pengajuan
-                                                anda</b>
+                                            <h5 class="text-danger">Silahkan menunggu pemilik kos menerima pengajuan anda
                                             </h5>
                                         </div>
-                                    @elseif($sewaKos->is_verified != 2 && $sewaKos->is_verified == 1)
+                                    @elseif($sewaKos->is_verified == 1)
                                         <div class="p-3 shadow-lg text-center">
                                             <h5>Anda telah menyewa KOS ini hingga <br><b>{{ $tanggalAkhir }}</b></h5>
                                         </div>
@@ -273,43 +271,38 @@
                                                     <button type="submit" class="btn btn-primary btn-block"
                                                         style="width: 100%;">Ajukan Sewa</button>
                                                 </div>
-
                                             </div>
                                         </form>
                                     @endif
+
                                     {{-- Jika pengguna belum memberikan rating --}}
-                                    @if (!$ulasan)
-                                        @if ($sewaKos->is_verified == 1)
-                                            <div class="mt-4">
-                                                <div class="p-3 border bg-white shadow">
-                                                    <h6 class="text-primary mb-3">Bantu pemilik KOS untuk meningkatkan
-                                                        pelayanan dengan menulis ulasan dan rating</h6>
-                                                    <form action="{{ route('rating.store') }}" method="POST"
-                                                        enctype="multipart/form-data">
-                                                        @csrf
-                                                        <input type="hidden" name="id_kos"
-                                                            value="{{ $kos->id }}">
-                                                        <div class="mb-3">
-                                                            <label>Rating</label>
-                                                            <input type="number" name="rating" class="form-control"
-                                                                max="5" min="1" required>
-                                                            <small>Berikan rating kamu dari 1 sampai 5 berdasarkan
-                                                                pengalaman
-                                                                kamu</small>
-                                                        </div>
-                                                        <div class="mb-3">
-                                                            <label>Ulasan Anda</label>
-                                                            <textarea class="form-control" name="ulasan" required></textarea>
-                                                        </div>
-                                                        <div class="mb-3">
-                                                            <button type="submit" class="btn btn-primary">Submit</button>
-                                                        </div>
-                                                    </form>
-                                                </div>
+                                    @if (!$ulasan && $sewaKos->is_verified == 1)
+                                        <div class="mt-4">
+                                            <div class="p-3 border bg-white shadow">
+                                                <h6 class="text-primary mb-3">Bantu pemilik KOS untuk meningkatkan
+                                                    pelayanan dengan menulis ulasan dan rating</h6>
+                                                <form action="{{ route('rating.store') }}" method="POST"
+                                                    enctype="multipart/form-data">
+                                                    @csrf
+                                                    <input type="hidden" name="id_kos" value="{{ $kos->id }}">
+                                                    <div class="mb-3">
+                                                        <label>Rating</label>
+                                                        <input type="number" name="rating" class="form-control"
+                                                            max="5" min="1" required>
+                                                        <small>Berikan rating kamu dari 1 sampai 5 berdasarkan pengalaman
+                                                            kamu</small>
+                                                    </div>
+                                                    <div class="mb-3">
+                                                        <label>Ulasan Anda</label>
+                                                        <textarea class="form-control" name="ulasan" required></textarea>
+                                                    </div>
+                                                    <div class="mb-3">
+                                                        <button type="submit" class="btn btn-primary">Submit</button>
+                                                    </div>
+                                                </form>
                                             </div>
-                                        @endif
-                                    @else
-                                        {{-- Jika pengguna sudah memberikan rating --}}
+                                        </div>
+                                    @elseif ($ulasan)
                                         <div class="mt-4">
                                             <div class="p-3 border bg-white shadow">
                                                 <h6 class="text-primary mb-3">Terima kasih telah memberikan rating dan
@@ -325,6 +318,7 @@
                                             </div>
                                         </div>
                                     @endif
+
                                     @if ($sewaKos->is_verified != 2)
                                         <div class="my-3">
                                             <a href="https://wa.me/{{ $kos->user->no_hp }}" class="btn btn-warning"
@@ -374,11 +368,16 @@
                                         <input type="date" class="form-control form-lg" name="tanggal" required>
                                     </div>
                                     <div class="mb-3">
-                                        <a href="https://wa.me/{{ $kos->user->no_hp }}" class="btn  btn-warning"
-                                            style="display: block;"><i class="icon-phone"></i>
-                                            Tanya
-                                            Pemilik KOS</a>
+                                        <a href="https://wa.me/{{ $kos->user->no_hp }}" class="btn btn-warning"
+                                            style="display: block;">
+                                            <i class="icon-phone"></i> Tanya Pemilik KOS
+                                        </a>
                                     </div>
+                                    <div class="mb-3">
+                                        <button type="submit" class="btn btn-primary btn-block"
+                                            style="width: 100%;">Ajukan Sewa</button>
+                                    </div>
+                                </div>
                             </form>
                         @endif
                     @else
