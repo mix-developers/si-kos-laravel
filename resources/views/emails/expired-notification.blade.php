@@ -9,7 +9,7 @@
     <h1>Penyewaan Kos akan berakhir</h1>
     <p>Halo {{ $sewa->user->name }},</p>
     <p>Masa sewa Anda untuk kos <strong>{{ $kos->nama }}</strong> akan berakhir pada
-        <strong>{{ $sewa->tanggal_sewa->addMonths($sewa->jangka_waktu)->format('d M Y') }}</strong>.
+        <strong>{{ date('Y-m-d', strtotime($sewa->tanggal_sewa . ' +' . $sewa->jangka_waktu . ' months')) }}</strong>.
     </p>
     <p>Kos yang kamu sewa akan segera berakhir dalam 1 minggu. dengan keterangan penyewaan :</p>
     <ul>
