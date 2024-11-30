@@ -112,7 +112,7 @@
                                 </div>
                             </div>
                         </div>
-                    @elseif($active->is_verified == 2)
+                    @elseif($active->is_verified == 0)
                         <h3 class="mt-4 text-success">Menunggu Persetujuan</h3>
                         <div class="mt-4">
                             <div class="p-3 border" style="border-radius: 20px;">
