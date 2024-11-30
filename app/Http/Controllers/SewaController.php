@@ -113,7 +113,7 @@ class SewaController extends Controller
         return datatables()::of($sewa)
             ->addColumn('action', function ($sewa) {
                 $tanggalAkhir = Carbon::parse($sewa->tanggal_sewa)->addMonths($sewa->jangka_waktu);
-                if (Carbon::now()->gt($tanggalAkhir) && $sewa->is_verified == 0) {
+                if (Carbon::now() > $tanggalAkhir && $sewa->is_verified == 0) {
 
                     $accept = '<button type="button" onclick="acceptAction(' . $sewa->id . ')" class="btn btn-sm btn-success mx-1">Terima</button>';
                     $reject = '<button type="button"  onclick="rejectAction(' . $sewa->id . ')"  class="btn btn-sm btn-danger mx-1">Tolak</button>';
