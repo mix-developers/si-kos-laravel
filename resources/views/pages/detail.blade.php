@@ -250,6 +250,32 @@
                                         <div class="p-3 shadow-lg text-center">
                                             <h5>Anda telah menyewa KOS ini hingga <br><b>{{ $tanggalAkhir }}</b></h5>
                                         </div>
+                                    @else
+                                        <form action="{{ route('sewa.ajukan') }}" method="GET">
+                                            <div class="p-3 shadow-lg">
+                                                <div class="d-flex align-items-center mb-3">
+                                                    <h2 class="mx-2 fw-bold">Rp {{ number_format($kos->harga_kos) }}</h2>
+                                                    (per-bulan)
+                                                </div>
+                                                <input type="hidden" name="id_kos" value="{{ $kos->id }}">
+                                                <div class="mb-3">
+                                                    <label>Tanggal masuk</label>
+                                                    <input type="date" class="form-control form-lg" name="tanggal"
+                                                        required>
+                                                </div>
+                                                <div class="mb-3">
+                                                    <a href="https://wa.me/{{ $kos->user->no_hp }}"
+                                                        class="btn btn-warning" style="display: block;">
+                                                        <i class="icon-phone"></i> Tanya Pemilik KOS
+                                                    </a>
+                                                </div>
+                                                <div class="mb-3">
+                                                    <button type="submit" class="btn btn-primary btn-block"
+                                                        style="width: 100%;">Ajukan Sewa</button>
+                                                </div>
+
+                                            </div>
+                                        </form>
                                     @endif
                                     {{-- Jika pengguna belum memberikan rating --}}
                                     @if (!$ulasan)
