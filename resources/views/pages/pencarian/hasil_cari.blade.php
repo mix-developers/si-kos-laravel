@@ -23,12 +23,13 @@
     <hr>
     <div class="section">
         <div class="container">
-           
+
             <div class="row justify-content-center">
-                @if($kos->count()==0)
-                <div class="col-12">
-                    <h4 class="text-mutted text-center">Kos yang anda cari tidak ditemukan, silahkan coba cari lagi yah...</h4>
-                </div>
+                @if ($kos->count() == 0)
+                    <div class="col-12">
+                        <h4 class="text-mutted text-center">Kos yang anda cari tidak ditemukan, silahkan coba cari lagi
+                            yah...</h4>
+                    </div>
                 @endif
                 @foreach ($kos as $item)
                     <div class="col-lg-4 col-md-6">
@@ -40,13 +41,17 @@
                             </a>
                             <div class="property-content">
                                 <div class="price mb-2"><span>Rp {{ number_format($item->harga_kos) }}</span>
-                                    <samll style="color: rgb(65, 65, 65); font-size:14px;">/ Bulan</samll>
+                                    <samll style="color: rgb(65, 65, 65); font-size:14px;">/ Bulan <span
+                                            class="badge bg-{{ App\Models\SewaKos::tersedia($item->id) != 0 ? 'success' : 'danger' }} mx-2">{{ App\Models\SewaKos::tersedia($item->id) != 0 ? 'Open' : 'Close' }}</span>
+                                    </samll>
                                 </div>
                                 <div>
                                     <div class="d-flex align-items-center">
                                         <strong class="px-2 border rounded text-success"
                                             style="font-size: 14px;">{{ $item->peruntukan }}</strong>
-                                        <i class="icon-star mx-2 text-success"></i> <b>{{App\Models\Rating::getRatingKos($item->id)}} </b> <small class="mx-1"> ( {{App\Models\Rating::where('id_kos',$item->id)->count()}} Ulasan )</small>
+                                        <i class="icon-star mx-2 text-success"></i>
+                                        <b>{{ App\Models\Rating::getRatingKos($item->id) }} </b> <small class="mx-1"> (
+                                            {{ App\Models\Rating::where('id_kos', $item->id)->count() }} Ulasan )</small>
                                     </div>
                                     <span class="d-block mb-2 text-black-50">Pemilik : {{ $item->nama_pemilik }}
                                         <b>({{ $item->alamat_kos }})</b>
