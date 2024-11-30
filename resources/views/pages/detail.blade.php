@@ -239,6 +239,7 @@
                             @else
                                 {{-- Jika sewa masih aktif --}}
                                 @if ($isSewaAktif)
+                                    {{-- Jika sewa belum diverifikasi --}}
                                     @if ($sewaKos->is_verified == 0)
                                         <div class="p-3 shadow-lg text-center text-warning">
                                             <h5 class="text-danger">Silahkan menunggu pemilik kos menerima pengajuan anda
@@ -248,7 +249,7 @@
                                         <div class="p-3 shadow-lg text-center">
                                             <h5>Anda telah menyewa KOS ini hingga <br><b>{{ $tanggalAkhir }}</b></h5>
                                         </div>
-                                    @else
+                                    @elseif($sewaKos->is_verified == 2)
                                         <form action="{{ route('sewa.ajukan') }}" method="GET">
                                             <div class="p-3 shadow-lg">
                                                 <div class="d-flex align-items-center mb-3">
