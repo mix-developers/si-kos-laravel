@@ -188,10 +188,9 @@ class SewaController extends Controller
                 $kos->status = 'Open';
                 $kos->save();
             }
-            $message = 'Berhasil membataljan';
         }
-
-        return response()->json($message);
+        session()->flash('success', 'berhasil membatalkan penyewaan.');
+        return back();
     }
     public function reject($id)
     {
