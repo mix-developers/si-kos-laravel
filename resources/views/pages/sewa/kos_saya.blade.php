@@ -217,7 +217,7 @@
 
             @if (count($sewa_no_active) > 0)
                 @foreach ($sewa_no_active as $sewa)
-                    @if ($sewa->is_verified == 1)
+                    @if ($sewa->is_verified == 1 || $sewa->is_verified == 3)
                         <div class="my-4">
                             <div class="p-3 border" style="border-radius: 20px;">
                                 <div class="row align-items-center">

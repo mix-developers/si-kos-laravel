@@ -247,7 +247,13 @@
                                         </div>
                                     @elseif($sewaKos->is_verified == 1)
                                         <div class="p-3 shadow-lg text-center">
-                                            <h5>Anda telah menyewa KOS ini hingga <br><b>{{ $tanggalAkhir }}</b></h5>
+                                            <h5>Anda telah menyewa KOS ini hingga <br><b>{{ $tanggalAkhir }}</b><br>
+                                            </h5>
+                                            <form action="{{ route('sewa.cancel', $sewaKos->id) }}" method="POST"
+                                                onsubmit="return confirm('Apakah Anda yakin ingin membatalkan penyewaan pada kos ini?')">
+                                                @csrf
+                                                <button type="submit" class="btn btn-danger">Batalkan Penyewaan</button>
+                                            </form>
                                         </div>
                                     @elseif($sewaKos->is_verified == 2)
                                         <form action="{{ route('sewa.ajukan') }}" method="GET">

@@ -131,10 +131,13 @@ class SewaController extends Controller
                 $diterima = '<span class="badge bg-success">diterima</span>';
                 $tolak = '<span class="badge bg-danger">ditolak</span>';
                 $menunggu = '<span class="badge bg-secondary">pengajuan</span>';
+                $berakhir = '<span class="badge bg-danger">berakhir</span>';
                 if ($sewa->is_verified == 0) {
                     return $menunggu;
                 } elseif ($sewa->is_verified == 1) {
                     return $diterima;
+                } elseif ($sewa->is_verified == 3) {
+                    return $berakhir;
                 } else {
                     return $tolak;
                 }
@@ -171,6 +174,23 @@ class SewaController extends Controller
         } else {
             $message = 'Kos telah penuh';
         }
+        return response()->json($message);
+    }
+    public function cancel($id)
+    {
+        $message = '';
+        $sewa = SewaKos::find($id);
+        $sewa->is_verified = 3;
+        if ($sewa->save()) {
+            $cek_pintu2 = Kos::find($sewa->id_kos);
+            if ($cek_pintu2->status == 'Close') {
+                $kos = Kos::find($sewa->id_kos);
+                $kos->status = 'Open';
+                $kos->save();
+            }
+            $message = 'Berhasil membataljan';
+        }
+
         return response()->json($message);
     }
     public function reject($id)
