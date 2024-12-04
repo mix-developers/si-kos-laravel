@@ -62,6 +62,7 @@ Auth::routes(['verify' => true]);
 Auth::routes();
 Route::middleware(['auth:web', 'verified'])->group(function () {
     Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::get('/sewa/cancel/{id}', [SewaController::class, 'cancel'])->name('sewa.cancel');
 });
 Route::middleware(['auth:web', 'role:Admin,Pemilik_kos', 'verified'])->group(function () {
     Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
@@ -93,7 +94,7 @@ Route::middleware(['auth:web', 'role:Pemilik_kos', 'verified'])->group(function 
     //sewa managemen
     Route::get('/sewa',  [SewaController::class, 'index'])->name('sewa');
     Route::get('/sewa/accept/{id}', [SewaController::class, 'accept'])->name('sewa.accept');
-    Route::get('/sewa/cancel/{id}', [SewaController::class, 'cancel'])->name('sewa.cancel');
+    // Route::get('/sewa/cancel/{id}', [SewaController::class, 'cancel'])->name('sewa.cancel');
     Route::get('/sewa/reject/{id}', [SewaController::class, 'reject'])->name('sewa.reject');
     // Route::get('/sewa-datatable',  [SewaController::class, 'getSewaDataTable']);
 
