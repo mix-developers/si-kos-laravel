@@ -254,7 +254,7 @@
                                                 <button type="submit" class="btn btn-danger">Batalkan Penyewaan</button>
                                             </form>
                                         </div>
-                                    @elseif($sewaKos->is_verified == 2)
+                                    @elseif($sewaKos->is_verified == 2 || $sewaKos->is_verified == 3)
                                         <form action="{{ route('sewa.ajukan') }}" method="GET">
                                             <div class="p-3 shadow-lg">
                                                 <div class="d-flex align-items-center mb-3">
