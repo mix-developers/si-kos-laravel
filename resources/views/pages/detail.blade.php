@@ -331,7 +331,7 @@
                                         </div>
                                     @endif
 
-                                    @if ($sewaKos->is_verified != 2)
+                                    @if ($sewaKos->is_verified < 2)
                                         <div class="my-3">
                                             <a href="https://wa.me/{{ $kos->user->no_hp }}" class="btn btn-warning"
                                                 style="display: block;">
