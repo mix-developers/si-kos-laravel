@@ -185,12 +185,12 @@ class SewaController extends Controller
             return back();
         }
 
-        $sewa->is_verified = 3; // Set status pembatalan
+        $sewa->is_verified = 3;
         if ($sewa->save()) {
             $kos = Kos::find($sewa->id_kos);
 
             if ($kos && $kos->status == 'Close') {
-                $kos->status = 'Open'; // Ubah status kos menjadi "Open" jika sebelumnya "Close"
+                $kos->status = 'Open';
                 $kos->save();
             }
 
@@ -198,7 +198,6 @@ class SewaController extends Controller
         } else {
             session()->flash('error', 'Gagal membatalkan penyewaan.');
         }
-
         return back();
     }
     public function reject($id)
