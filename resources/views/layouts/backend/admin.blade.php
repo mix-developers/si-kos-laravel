@@ -16,7 +16,18 @@
 
             // Hitung selisih hari
             $selisihHari = Carbon::now()->diffInDays($tanggalAkhir, false);
+            if ($selisihHari <= 0) {
+                $sewaKos->is_verified = 3; // Set status menjadi "dibatalkan"
+                $sewaKos->save();
 
+                // Perbarui status kos jika diperlukan
+                $kos = $sewaKos->kos;
+                if ($kos && $kos->status == 'Close') {
+                    $kos->status = 'Open';
+                    $kos->save();
+                }
+                continue;
+            }
             // Jika kurang dari 7 hari dan belum lewat
             if ($selisihHari > 0 && $selisihHari <= 7) {
                 $kos = $sewaKos->kos; // Relasi ke model Kos
