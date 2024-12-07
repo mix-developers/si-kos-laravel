@@ -71,7 +71,7 @@ class KosController extends Controller
         }
         return DataTables::of($Kos)
             ->addColumn('lihat', function ($Kos) {
-                return '<a href="' . url('/kos', $Kos->slug) . '" class="btn btn-primary btn-sm" target="__blank">Lihat Kos</a>';
+                return '<a href="' . url('/detail-kos', $Kos->slug) . '" class="btn btn-primary btn-sm" target="__blank">Lihat Kos</a>';
             })
             ->addColumn('alamat', function ($Kos) {
                 return 'Jalan : ' . $Kos->jalan->jalan . '<br>Kelurahan : ' . $Kos->kelurahan->kelurahan;

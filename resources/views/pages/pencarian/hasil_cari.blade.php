@@ -35,7 +35,7 @@
                     <div class="col-lg-4 col-md-6">
 
                         <div class="property-item">
-                            <a href="{{ url('/kos', $item->slug) }}" class="img">
+                            <a href="{{ url('/detail-kos', $item->slug) }}" class="img">
                                 <img src="{{ Storage::url($item->foto_1) }}" alt="Image"
                                     style="width: 100%; height:350px; object-fit:cover;" />
                             </a>
@@ -80,7 +80,7 @@
                                             </div>
                                         @endforeach
                                     </div>
-                                    <a href="{{ url('/kos', $item->slug) }}" class="btn btn-primary py-2 px-3 "
+                                    <a href="{{ url('/detail-kos', $item->slug) }}" class="btn btn-primary py-2 px-3 "
                                         style="width: 100%">Lihat
                                         Kos</a>
                                 </div>
