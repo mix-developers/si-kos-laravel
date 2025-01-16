@@ -97,6 +97,9 @@
                     <!-- .item -->
                 @endforeach
             </div>
+            <div class="mt-5 text-center d-flex justify-content-center">
+                {{ $kos->links('pagination::bootstrap-4') }}
+            </div>
         </div>
     </div>
 @endsection
