@@ -32,14 +32,14 @@ class SewaKos extends Model
     public static function tersedia($id_kos)
     {
         $kos = Kos::where('id', $id_kos)->first()->jumlah_pintu;
-
+        $kos_model = Kos::find($id_kos);
         $tersewa = self::tersewa($id_kos);
         if ($kos - $tersewa != 0) {
-            $kos->status = 'Open';
-            $kos->save();
+            $kos_model->status = 'Open';
+            $kos_model->save();
         } else {
-            $kos->status = 'Close';
-            $kos->save();
+            $kos_model->status = 'Close';
+            $kos_model->save();
         }
 
         return $kos - $tersewa;
