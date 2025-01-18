@@ -34,6 +34,13 @@ class SewaKos extends Model
         $kos = Kos::where('id', $id_kos)->first()->jumlah_pintu;
 
         $tersewa = self::tersewa($id_kos);
+        if ($kos - $tersewa != 0) {
+            $kos->status = 'Open';
+            $kos->save();
+        } else {
+            $kos->status = 'Close';
+            $kos->save();
+        }
 
         return $kos - $tersewa;
     }
