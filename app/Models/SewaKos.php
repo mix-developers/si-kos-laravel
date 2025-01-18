@@ -31,14 +31,13 @@ class SewaKos extends Model
     }
     public static function tersedia($id_kos)
     {
-        // Ambil data kos berdasarkan ID
+
         $kos = Kos::find($id_kos);
 
-        // Hitung jumlah pintu tersedia
         $tersewa = self::tersewa($id_kos);
         $tersedia = $kos->jumlah_pintu - $tersewa;
 
-        // Update status kos berdasarkan ketersediaan
+
         $kos->status = ($tersedia > 0) ? 'Open' : 'Close';
         $kos->save();
 

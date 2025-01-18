@@ -7,6 +7,7 @@ use App\Models\FasilitasUmumKos;
 use App\Models\Jalan;
 use App\Models\Kelurahan;
 use App\Models\Kos;
+use App\Models\SewaKos;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Yajra\DataTables\Facades\DataTables;
@@ -76,7 +77,10 @@ class KosController extends Controller
             ->addColumn('alamat', function ($Kos) {
                 return 'Jalan : ' . $Kos->jalan->jalan . '<br>Kelurahan : ' . $Kos->kelurahan->kelurahan;
             })
-            ->rawColumns(['lihat', 'alamat'])
+            ->addColumn('status', function ($Kos) {
+                return SewaKos::tersedia($Kos->id) != 0 ? 'Open' : 'Close';
+            })
+            ->rawColumns(['lihat', 'alamat', 'status'])
             ->make(true);
     }
     public function getFasilitasUmumDataTable($id_kos)
