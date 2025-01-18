@@ -52,7 +52,8 @@ class KosController extends Controller
         if ($request->filled('fasilitas')) {
             $fasilitasIds = $request->input('fasilitas');
             $query->whereHas('fasilitas', function ($q) use ($fasilitasIds) {
-                $q->whereIn('fasilitas_kos.id', $fasilitasIds);
+                $q->whereIn('fasilitas_kos.id', $fasilitasIds) // Menyaring fasilitas berdasarkan ID
+                    ->where('ketersediaan', 'Y'); // Menyaring fasilitas yang ketersediaannya 'Y' (tersedia)
             });
         }
 
