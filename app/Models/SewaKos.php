@@ -31,17 +31,17 @@ class SewaKos extends Model
     }
     public static function tersedia($id_kos)
     {
-        $kos = Kos::where('id', $id_kos)->first()->jumlah_pintu;
-        $kos_model = Kos::find($id_kos);
-        $tersewa = self::tersewa($id_kos);
-        if ($kos - $tersewa != 0) {
-            $kos_model->status = 'Open';
-            $kos_model->save();
-        } else {
-            $kos_model->status = 'Close';
-            $kos_model->save();
-        }
+        // Ambil data kos berdasarkan ID
+        $kos = Kos::find($id_kos);
 
-        return $kos - $tersewa;
+        // Hitung jumlah pintu tersedia
+        $tersewa = self::tersewa($id_kos);
+        $tersedia = $kos->jumlah_pintu - $tersewa;
+
+        // Update status kos berdasarkan ketersediaan
+        $kos->status = ($tersedia > 0) ? 'Open' : 'Close';
+        $kos->save();
+
+        return $tersedia;
     }
 }
