@@ -52,7 +52,7 @@ class KosController extends Controller
         if ($request->filled('fasilitas')) {
             $fasilitasIds = $request->input('fasilitas');
             $query->whereHas('fasilitas', function ($q) use ($fasilitasIds) {
-                $q->whereIn('fasilitas_kos.id', $fasilitasIds); // Tambahkan alias tabel untuk menghindari ambiguitas
+                $q->whereIn('fasilitas_kos.id', $fasilitasIds);
             });
         }
 
@@ -62,7 +62,7 @@ class KosController extends Controller
                 if ($jumlah > 0) {
                     $query->whereHas('fasilitas', function ($q) use ($fasilitasId, $jumlah) {
                         $q->where('fasilitas_kos.id', $fasilitasId)
-                            ->where('jumlah', '>=', $jumlah); // Gunakan alias
+                            ->where('jumlah', $jumlah); // Gunakan alias
                     });
                 }
             }
