@@ -41,13 +41,31 @@ class KosController extends Controller
         if ($request->filled('id_jalan')) {
             $query->where('id_jalan', '>=', $request->input('id_jalan'));
         }
-
         if ($request->filled('price_max')) {
             $query->where('harga_kos', '<=', $request->input('price_max'));
         }
-
         if ($request->filled('peruntukan')) {
             $query->where('peruntukan', $request->input('peruntukan'));
+        }
+
+        // Filter fasilitas
+        if ($request->filled('fasilitas')) {
+            $fasilitasIds = $request->input('fasilitas');
+            $query->whereHas('fasilitas', function ($q) use ($fasilitasIds) {
+                $q->whereIn('fasilitas_kos.id', $fasilitasIds); // Tambahkan alias tabel untuk menghindari ambiguitas
+            });
+        }
+
+        // Filter jumlah fasilitas
+        if ($request->filled('jumlah')) {
+            foreach ($request->input('jumlah') as $fasilitasId => $jumlah) {
+                if ($jumlah > 0) {
+                    $query->whereHas('fasilitas', function ($q) use ($fasilitasId, $jumlah) {
+                        $q->where('fasilitas_kos.id', $fasilitasId)
+                            ->where('jumlah', '>=', $jumlah); // Gunakan alias
+                    });
+                }
+            }
         }
 
         $kos = $query->get();

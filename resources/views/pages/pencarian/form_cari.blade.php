@@ -43,6 +43,41 @@
                             </div>
                         </div>
                     </div>
+                    <hr>
+                    <div class="row mt-4">
+                        {{-- // Filter fasilitas pada form --}}
+                        <div class="col-lg-6">
+                            <h5>Filter Fasilitas</h5>
+                            @foreach (App\Models\FasilitasKos::all() as $item)
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="checkbox" id="fasilitas-{{ $item->id }}"
+                                        name="fasilitas[]" value="{{ $item->id }}"
+                                        @if (in_array($item->id, request('fasilitas', []))) checked @endif>
+                                    <label class="form-check-label" for="fasilitas-{{ $item->id }}">
+                                        {{ $item->nama_fasilitas }}
+                                    </label>
+                                </div>
+                            @endforeach
+                        </div>
+                        <div class="col-lg-6">
+                            <h5>Filter Jumlah Fasilitas</h5>
+                            {{-- // Filter berdasarkan jumlah fasilitas --}}
+                            <div class="row">
+
+                                @foreach (App\Models\FasilitasKos::all() as $item)
+                                    <div class="col-6">
+                                        <label for="jumlah-{{ $item->id }}">{{ $item->nama_fasilitas }}</label>
+                                    </div>
+                                    <div class="col-6">
+                                        <input type="number" id="jumlah-{{ $item->id }}"
+                                            name="jumlah[{{ $item->id }}]" min="0" max="5"
+                                            value="{{ old('jumlah.' . $item->id, request('jumlah.' . $item->id, 0)) }}"
+                                            class="p-1 mb-3">
+                                    </div>
+                                @endforeach
+                            </div>
+                        </div>
+                    </div>
                     <button type="submit" class="btn btn-primary mt-3" style="width: 100%;">Cari KOS</button>
                 </form>
             </div>

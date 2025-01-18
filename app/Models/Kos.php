@@ -24,4 +24,9 @@ class Kos extends Model
     {
         return $this->belongsTo(User::class, 'id_user');
     }
+    public function fasilitas()
+    {
+        return $this->belongsToMany(FasilitasKos::class, 'fasilitas_umum_kos', 'id_kos', 'id_fasilitas')
+            ->withPivot('jumlah'); // Kolom 'jumlah' pada tabel pivot
+    }
 }

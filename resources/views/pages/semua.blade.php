@@ -47,7 +47,7 @@
                             </a>
                             <div class="property-content">
                                 <div class="price mb-2"><span>Rp {{ number_format($item->harga_kos) }}</span>
-                                    <samll style="color: rgb(65, 65, 65); font-size:14px;">/ Bulan
+                                <samll style="color: rgb(65, 65, 65); font-size:14px;">/ Bulan
                                         <span
                                             class="badge bg-{{ App\Models\SewaKos::tersedia($item->id) != 0 ? 'success' : 'danger' }} mx-2">{{ App\Models\SewaKos::tersedia($item->id) != 0 ? 'Open' : 'Close' }}</span>
                                     </samll>
